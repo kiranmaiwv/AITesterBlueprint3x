@@ -47,25 +47,32 @@ def test_2_create_failure_validation(api_session, auth_token, invalid_field, pay
     assert "Error" in response.text # Asserting the response body contains an error message
 
 
-def test_read_and_update_reservation(session, sample_session):
+def test_read_and_update_reservation(api_session, sample_reservation_id):
     """Tests retrieving and updating a specific record."""
     # 1. Read
-    get_url = f"{session}/detail/{sample_session}"
-    response = session.get(get_url)
+    get_url = f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/detail/{sample_reservation_id}"
+    response = api_session.get(get_url)
     assert response.status_code == 200
     
     # 2. Update
     update_payload = {"status": "CHECKED_IN", "notes": "Guest arrived successfully."}
-    update_response = session.put(get_url, json=update_payload)
+    update_response = api_session.put(get_url, json=update_payload)
     assert update_response.status_code == 200
     updated_data = update_response.json()
     assert updated_data["status"] == "CHECKED_IN"
     
 # --- Test scope and cleanup (Uses fixture from example structure) ---
-def test_update_booking(session, sample_session):
+def test_update_booking(api_session, sample_reservation_id):
     """
-    This test uses the fixture 'sample_session' which represents a bookable session ID.
-    It tests the update functionality using the session object.
+    This test uses the fixture 'sample_reservation_id' which represents a reservation ID.
+    It tests the update functionality using the api_session object.
     """
-    # This test requires the session/sample_session fixture to run correctly.
-    pass
+    # This test requires the api_session/sample_reservation_id fixture to run correctly.
+    update_payload = {"status": "CANCELLED", "reason": "Guest requested cancellation"}
+    response = api_session.put(
+        f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/{sample_reservation_id}",
+        json=update_payload
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "CANCELLED"
