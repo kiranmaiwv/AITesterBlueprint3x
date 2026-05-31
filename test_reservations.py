@@ -54,9 +54,10 @@ def test_read_and_update_reservation(api_session, sample_reservation_id):
     response = api_session.get(get_url)
     assert response.status_code == 200
     
-    # 2. Update
+    # 2. Update - use the correct URL for PUT (without /detail/)
+    update_url = f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/{sample_reservation_id}"
     update_payload = {"status": "CHECKED_IN", "notes": "Guest arrived successfully."}
-    update_response = api_session.put(get_url, json=update_payload)
+    update_response = api_session.put(update_url, json=update_payload)
     assert update_response.status_code == 200
     updated_data = update_response.json()
     assert updated_data["status"] == "CHECKED_IN"

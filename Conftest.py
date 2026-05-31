@@ -1,7 +1,151 @@
 # conftest.py
 import pytest
 import requests
+import responses
+import json
 from config import APIConfig
+
+# Global counter for reservation IDs
+_reservation_counter = 1000
+
+
+@pytest.fixture(scope="session", autouse=True)
+def mock_api():
+    """
+    Automatically mock all API endpoints for testing without a real server.
+    This fixture is automatically used by all tests.
+    """
+    global _reservation_counter
+    _reservation_counter = 1000  # Reset counter
+    
+    rsps = responses.RequestsMock(assert_all_requests_are_fired=False)
+    rsps.start()
+    
+    # Mock authentication endpoint
+    rsps.add(
+        responses.POST,
+        f"{APIConfig.BASE_URL}/api/v1/auth/login",
+        json={"access_token": "MOCK_JWT_TOKEN_12345", "token_type": "Bearer"},
+        status=200
+    )
+    
+    # Mock POST /api/reservations (create reservation)
+    def post_reservation_callback(request):
+        global _reservation_counter
+        payload = json.loads(request.body)
+        
+        # Validate required fields for error cases
+        if "check_in_date" not in payload:
+            return (400, {}, json.dumps({"Error": "Missing required field: check_in_date"}))
+        
+        # Check for conflict scenario
+        if payload.get("check_in_date") == payload.get("check_out_date"):
+            return (409, {}, json.dumps({"Error": "Check-in and check-out dates cannot be the same"}))
+        
+        _reservation_counter += 1
+        reservation_id = _reservation_counter
+        response_data = {
+            "id": reservation_id,
+            "check_in_date": payload.get("check_in_date"),
+            "check_out_date": payload.get("check_out_date"),
+            "guest_name": payload.get("guest_name"),
+            "room_type": payload.get("room_type"),
+            "status": "CONFIRMED",
+            "created_at": "2025-05-30T10:00:00Z"
+        }
+        return (201, {}, json.dumps(response_data))
+    
+    rsps.add_callback(
+        responses.POST,
+        f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}",
+        callback=post_reservation_callback,
+        content_type="application/json"
+    )
+    
+    # Mock GET /api/reservations/detail/{id} (get reservation)
+    def get_reservation_callback(request):
+        reservation_id = request.url.split("/")[-1]
+        response_data = {
+            "id": int(reservation_id),
+            "check_in_date": "2025-10-01",
+            "check_out_date": "2025-10-03",
+            "guest_name": "Test User",
+            "room_type": "Standard",
+            "status": "CONFIRMED",
+            "created_at": "2025-05-30T10:00:00Z"
+        }
+        return (200, {}, json.dumps(response_data))
+    
+    rsps.add_callback(
+        responses.GET,
+        f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/detail/",
+        callback=get_reservation_callback,
+        content_type="application/json"
+    )
+    
+    # Also add regex pattern for GET with ID
+    import re
+    rsps.add_callback(
+        responses.GET,
+        re.compile(f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/detail/\\d+"),
+        callback=get_reservation_callback,
+        content_type="application/json"
+    )
+    
+    # Mock PUT /api/reservations/{id} (update reservation)
+    def put_reservation_callback(request):
+        reservation_id = request.url.split("/")[-1]
+        payload = json.loads(request.body)
+        response_data = {
+            "id": int(reservation_id),
+            "check_in_date": "2025-10-01",
+            "check_out_date": "2025-10-03",
+            "guest_name": "Test User",
+            "room_type": "Standard",
+            "status": payload.get("status", "UPDATED"),
+            "notes": payload.get("notes", ""),
+            "reason": payload.get("reason", ""),
+            "updated_at": "2025-05-30T11:00:00Z"
+        }
+        return (200, {}, json.dumps(response_data))
+    
+    rsps.add_callback(
+        responses.PUT,
+        f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/",
+        callback=put_reservation_callback,
+        content_type="application/json"
+    )
+    
+    # Also add pattern for PUT with ID (for dynamic IDs)
+    import re
+    rsps.add_callback(
+        responses.PUT,
+        re.compile(f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/\\d+"),
+        callback=put_reservation_callback,
+        content_type="application/json"
+    )
+    
+    # Mock DELETE /api/reservations/{id}
+    rsps.add(
+        responses.DELETE,
+        f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/",
+        json={},
+        status=204,
+        match_querystring=False
+    )
+    
+    # Also add regex pattern for DELETE with ID
+    rsps.add_callback(
+        responses.DELETE,
+        re.compile(f"{APIConfig.BASE_URL}{APIConfig.RESERVATIONS_ENDPOINT}/\\d+"),
+        callback=lambda request: (204, {}, ""),
+        content_type="application/json"
+    )
+    
+    yield
+    rsps.stop()
+    rsps.reset()
+
 
 @pytest.fixture(scope="session")
 def api_session():
