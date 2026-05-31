@@ -1,0 +1,4 @@
+pytest
+requests
+pydantic  # Useful for robust payload validation (Anti-Hallucination: Data Validation)
+python-dotenv # For loading environment variables (e.g., BASE_URL)
