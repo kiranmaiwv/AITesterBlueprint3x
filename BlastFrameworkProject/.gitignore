@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.env
+.venv/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Pytest
+.cache/
+
+# Logs
+*.log
+
+# Environment files
+.env.local
+.env.*.local
+
+# Ignore sensitive files
+secrets.json
+
+# Ignore coverage reports
+htmlcov/
+.coverage
+
+# Ignore Python egg metadata
+*.egg-info/
+dist/
+build/
+.vercel
