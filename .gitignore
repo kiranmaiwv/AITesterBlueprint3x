@@ -4,3 +4,9 @@ __pycache__/
 .DS_Store
 *.pyc
 https:/
+.vscode/
+Basic RAG/**/node_modules/
+Basic RAG/**/dist/
+Basic RAG/**/chroma_db/
+Basic RAG/**/.env
+Basic RAG/**/.DS_Store
