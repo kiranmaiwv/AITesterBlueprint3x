@@ -1,0 +1,395 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "Objective:\n\nBuild a basic RAG that can ingest text or PDF.It will ingest into a database using an embedded model and we should be able to retrieve it using a chat option"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        -384
+      ],
+      "typeVersion": 1,
+      "id": "efec3cc4-39f1-4099-8e44-be2925e7a2c5",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "#Phase 1: Ingestion\n\n\n",
+        "height": 304,
+        "width": 784,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "e817e7a4-93cd-4d65-bf31-62708eb11324",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "formTitle": "Upload Documents for RAG",
+        "formDescription": "Upload one or moe PDF,CSV,JSON files to add to the knowledge base",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload Files",
+              "fieldType": "file",
+              "fieldName": "files",
+              "multipleFiles": false,
+              "acceptFileTypes": ".pdf,.csv,.json,.docx,.txt,.html"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        -288,
+        -336
+      ],
+      "id": "ff604d7b-e894-49f1-8ae5-c3ac1bb391f7",
+      "name": "On form submission",
+      "webhookId": "2c2a5986-ade3-4766-a5bb-4fda92a1f373"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        -208
+      ],
+      "id": "c3ed3970-1025-4936-839d-ba820f0a91bc",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "filename",
+                "value": "={{ $('On form submission').item.json.files.filename }}"
+              },
+              {
+                "name": "uploadedAt",
+                "value": "={{ $('On form submission').item.json.submittedAt }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        -208
+      ],
+      "id": "7e1e1feb-ffdb-4c7e-b7d2-7199d8b47bc9",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        256,
+        -96
+      ],
+      "id": "439429f0-220e-4c2f-bb00-e76c51ef9d92",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "ai3x-1536",
+          "mode": "list",
+          "cachedResultName": "ai3x-1536"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        -336
+      ],
+      "id": "71362ae9-82e7-43d3-af51-f26054aeb02f",
+      "name": "Store the docs to Vector DB",
+      "credentials": {
+        "pineconeApi": {
+          "id": "fMYJX8VlFVc3APre",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "#Phase 2 RAG Explorer\n\n\n",
+        "height": 288,
+        "width": 864,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        32
+      ],
+      "typeVersion": 1,
+      "id": "301522e5-0778-4192-818e-acd326c16caf",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a knowledgeable Product Assistant for the VWO.com Login Page PRD. Your job is to answer questions accurately using ONLY the information retrieved from the ingested PRD document via the Pinecone Vector Store tool.\n\n## Your Role\nYou help team members (PMs, designers, engineers, QA) quickly find and understand details from the Login Page PRD without having to read the entire document.\n\n## Rules\n1. ALWAYS use the vector store retrieval tool to search for relevant context before answering any question about the PRD, features, requirements, or the login page.\n2. Base your answers strictly on the retrieved content. Do not use outside knowledge, assumptions, or general best practices unless explicitly asked to supplement with your own opinion — and if you do, clearly label it as \"Note: this is not from the PRD.\"\n3. If the retrieved context does not contain enough information to answer the question, say clearly: \"I couldn't find this in the PRD document. You may want to check with the product team or clarify this in the PRD.\"\n4. Do NOT hallucinate feature details, acceptance criteria, timelines, or metrics that aren't explicitly present in the retrieved chunks.\n5. When relevant, cite the section or heading from the PRD you pulled the answer from (e.g., \"According to the 'Functional Requirements' section...\").\n6. If a question is ambiguous, ask a clarifying question before searching, or state the assumption you're making.\n7. Keep answers concise and structured. Use bullet points or numbered lists for multi-part answers (e.g., requirements, edge cases, acceptance criteria).\n8. If asked to summarize the entire PRD or a large section, retrieve multiple relevant chunks and synthesize them into a coherent, non-redundant summary.\n9. If someone asks something completely unrelated to the PRD or login page (e.g., general coding help, unrelated product questions), politely redirect them: \"This assistant is scoped to the VWO Login Page PRD. Could you ask something related to that document?\"\n\n## Tone\nProfessional, clear, and helpful — like a well-prepared PM who has fully internalized the PRD and is happy to walk someone through it.\n\n## Output Format\n- Default to short paragraphs or bullet points.\n- For requirement lists, use numbered lists matching the PRD's structure where possible.\n- Bold key terms (e.g., **field validation**, **error states**, **SSO**) when relevant."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        48
+      ],
+      "id": "b2c3e220-0715-4367-841e-1d01fe4cbb39",
+      "name": "RAG Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -160,
+        192
+      ],
+      "id": "20702601-f6d5-4f14-a04b-3c1e7b107c7d",
+      "name": "Brain - gp-5-mini",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        192
+      ],
+      "id": "38f90b14-cf89-405b-91a7-190f0404f622",
+      "name": "Model Chat Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Search the uploaded PRD documents for the answers",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "ai3x-1536",
+          "mode": "list",
+          "cachedResultName": "ai3x-1536"
+        },
+        "topK": 3,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        160
+      ],
+      "id": "99f5a547-3d47-43cf-af24-cba49a601482",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "fMYJX8VlFVc3APre",
+          "name": "Pinecone account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        320
+      ],
+      "id": "8291f4a6-8ad8-47d8-84bc-1e5a75ac4012",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -288,
+        80
+      ],
+      "id": "3a13541d-dc2d-4818-b188-35480ea05dcf",
+      "name": "When chat message received",
+      "webhookId": "53c0c288-fc4f-4c29-82d6-5b89ad7ab5c3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Store the docs to Vector DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Store the docs to Vector DB",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Store the docs to Vector DB",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brain - gp-5-mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Model Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "f216c0e3-7312-45ca-86bb-785ee6e03ca0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ba2939cf51cc14a7030493f36724dfd4c4f139b592419f67a080526b4c0e7c1a"
+  },
+  "nodeGroups": [],
+  "id": "ewdA7bvmqbT1ApFa",
+  "tags": []
+}
