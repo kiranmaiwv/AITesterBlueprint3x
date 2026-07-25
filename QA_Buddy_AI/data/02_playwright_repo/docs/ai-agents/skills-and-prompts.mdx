@@ -1,0 +1,50 @@
+# Skills and Prompt Library
+
+## Instructor Skill Stack
+
+1. `Architecture Coach`
+Keep students inside `Pages -> Modules -> Tests`.
+
+2. `Prompt Framing Coach`
+Convert vague requests into strict Planner/Generator/Healer prompts.
+
+3. `MCP Operator`
+Run browser-grounded validation instead of assumption-based fixes.
+
+4. `Quality Gate Owner`
+Make `rules:check` + test run mandatory before accepting output.
+
+## Student Skills to Build
+
+1. Write page objects with locator arrow functions.
+2. Move business workflows into modules.
+3. Keep tests readable with tags and steps.
+4. Use Healer only after evidence (logs, trace, screenshot).
+
+## One-Page Prompt Set
+
+### Scenario planning
+```text
+Plan tests for <feature> with risks, data, tags, and impacted files.
+Output in markdown table.
+```
+
+### Controlled generation
+```text
+Generate code only in approved folders.
+Respect naming conventions and existing fixtures.
+No direct locator use in modules.
+```
+
+### Evidence-based healing
+```text
+Given failing logs + trace, propose smallest possible patch.
+Do not rewrite unrelated code.
+```
+
+## Class Rule
+
+No generated code is accepted until both pass:
+
+1. `npm run rules:check`
+2. Relevant test command (`npm test -- --grep "@tag"`)

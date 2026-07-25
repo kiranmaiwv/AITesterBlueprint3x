@@ -1,0 +1,97 @@
+# =============================================================================
+# Playwright Test Automation Framework - Docker Compose
+# =============================================================================
+# Author: Pramod Dutta | The Testing Academy
+# Website: https://thetestingacademy.com
+# =============================================================================
+#
+# Usage:
+#   docker-compose up                    # Run all tests with 4 shards
+#   docker-compose up shard-1            # Run only shard 1
+#   docker-compose up --scale shard=8    # Run with 8 parallel shards
+#   docker-compose down                  # Stop and remove containers
+#
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # Base service configuration (not run directly)
+  playwright-base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - CI=true
+      - BASE_URL=${BASE_URL:-https://thetestingacademy.com}
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+      - ./tta-report:/app/tta-report
+
+  # Shard 1 of 4
+  shard-1:
+    extends:
+      service: playwright-base
+    command: npx playwright test --shard=1/4 --reporter=list,json
+    container_name: playwright-shard-1
+
+  # Shard 2 of 4
+  shard-2:
+    extends:
+      service: playwright-base
+    command: npx playwright test --shard=2/4 --reporter=list,json
+    container_name: playwright-shard-2
+
+  # Shard 3 of 4
+  shard-3:
+    extends:
+      service: playwright-base
+    command: npx playwright test --shard=3/4 --reporter=list,json
+    container_name: playwright-shard-3
+
+  # Shard 4 of 4
+  shard-4:
+    extends:
+      service: playwright-base
+    command: npx playwright test --shard=4/4 --reporter=list,json
+    container_name: playwright-shard-4
+
+  # Smoke tests only (quick validation)
+  smoke:
+    extends:
+      service: playwright-base
+    command: npx playwright test --grep "@P0|@Smoke" --project=chromium
+    container_name: playwright-smoke
+
+  # Full regression (all tests, single container)
+  regression:
+    extends:
+      service: playwright-base
+    command: npx playwright test
+    container_name: playwright-regression
+
+  # Report merger (run after shards complete)
+  merge-reports:
+    extends:
+      service: playwright-base
+    command: npx playwright merge-reports --reporter html ./test-results
+    container_name: playwright-merge
+    depends_on:
+      shard-1:
+        condition: service_completed_successfully
+      shard-2:
+        condition: service_completed_successfully
+      shard-3:
+        condition: service_completed_successfully
+      shard-4:
+        condition: service_completed_successfully
+
+# =============================================================================
+# Volume definitions for persistent storage
+# =============================================================================
+volumes:
+  test-results:
+  playwright-report:
+  tta-report:
+

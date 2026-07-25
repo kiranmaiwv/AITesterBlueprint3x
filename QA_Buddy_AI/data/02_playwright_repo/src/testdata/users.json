@@ -1,0 +1,62 @@
+{
+    "validUsers": [
+        {
+            "id": "user-001",
+            "username": "testuser@example.com",
+            "password": "SecurePass123",
+            "firstName": "Test",
+            "lastName": "User",
+            "role": "customer"
+        },
+        {
+            "id": "user-002",
+            "username": "admin@example.com",
+            "password": "AdminPass456",
+            "firstName": "Admin",
+            "lastName": "User",
+            "role": "admin"
+        },
+        {
+            "id": "user-003",
+            "username": "premium@example.com",
+            "password": "PremiumPass789",
+            "firstName": "Premium",
+            "lastName": "Member",
+            "role": "premium"
+        }
+    ],
+    "invalidUsers": [
+        {
+            "username": "invalid@example.com",
+            "password": "wrongpassword",
+            "expectedError": "Invalid credentials"
+        },
+        {
+            "username": "nonexistent@example.com",
+            "password": "anypassword",
+            "expectedError": "User not found"
+        },
+        {
+            "username": "",
+            "password": "somepassword",
+            "expectedError": "Username is required"
+        },
+        {
+            "username": "test@example.com",
+            "password": "",
+            "expectedError": "Password is required"
+        }
+    ],
+    "newUserTemplate": {
+        "username": "newuser_{timestamp}@example.com",
+        "password": "NewUserPass123",
+        "firstName": "New",
+        "lastName": "User"
+    },
+    "lockedUser": {
+        "username": "locked@example.com",
+        "password": "LockedPass123",
+        "expectedError": "Account is locked"
+    }
+}
+

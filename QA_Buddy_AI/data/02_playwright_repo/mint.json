@@ -1,0 +1,31 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Advance Playwright Framework",
+  "theme": "venus",
+  "favicon": "/docs/images/arch.png",
+  "colors": {
+    "primary": "#0f766e",
+    "light": "#14b8a6",
+    "dark": "#115e59"
+  },
+  "navigation": [
+    {
+      "group": "AI Agents + MCP",
+      "pages": [
+        "docs/ai-agents/index",
+        "docs/ai-agents/class-plan",
+        "docs/ai-agents/planner-healer-generator",
+        "docs/ai-agents/mcp-without-hallucination",
+        "docs/ai-agents/rule-engine",
+        "docs/ai-agents/skills-and-prompts",
+        "docs/ai-agents/10-slide-class-deck"
+      ]
+    },
+    {
+      "group": "Framework Docs",
+      "pages": [
+        "docs/QUICK_REFERENCE"
+      ]
+    }
+  ]
+}

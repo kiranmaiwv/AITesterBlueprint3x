@@ -1,0 +1,36 @@
+# Playwright AI Agents + MCP Tutor Pack
+
+This documentation set is built for teaching Playwright AI + MCP using this repository's architecture:
+
+- `src/pages` for page objects
+- `src/modules` for workflows (including modal/module logic)
+- `src/utils` for utility classes
+- `src/tests` for specs
+
+## Session Outcome
+
+By the end of class, students can:
+
+1. Use the three Playwright agents (`Planner`, `Generator`, `Healer`) in a controlled workflow.
+2. Use Playwright MCP as a deterministic browser tool layer instead of free-form guessing.
+3. Generate tests that follow framework rules and pass the repository rule engine.
+
+## Quick Setup
+
+```bash
+npm install
+npx playwright install
+npm run rules:check
+npx playwright init-agents
+```
+
+`npx playwright init-agents` scaffolds instruction files for the three agents in `.github/instructions/`.
+
+## Docs Map
+
+- [Class Plan](./class-plan)
+- [Planner, Healer, Generator](./planner-healer-generator)
+- [MCP Without Hallucination](./mcp-without-hallucination)
+- [Rule Engine](./rule-engine)
+- [Skills and Prompt Library](./skills-and-prompts)
+- [10-Slide Class Deck](./10-slide-class-deck)

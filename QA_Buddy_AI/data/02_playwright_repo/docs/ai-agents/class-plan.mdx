@@ -1,0 +1,41 @@
+# Class Plan
+
+## Teaching Flow
+
+1. Framework baseline
+Explain `Pages -> Modules -> Tests` and why this controls AI output quality.
+
+2. Agent roles
+Explain `Planner` (thinks), `Generator` (writes), `Healer` (repairs).
+
+3. MCP baseline
+Show MCP server config and snapshot-first execution model.
+
+4. Live generation demo
+Use Planner output to generate one new flow with Generator.
+
+5. Rule engine gate
+Run `npm run rules:check` and explain failures as guardrails.
+
+6. Healing loop
+Run tests, use Healer on a failing test, rerun gate + tests.
+
+## Live Demo Checklist
+
+1. Start from one feature statement: `Guest user can add item to cart`.
+2. Ask Planner for scenario list + required data.
+3. Ask Generator to create/update:
+`src/pages`, `src/modules`, `src/tests`, and `src/testdata` only.
+4. Run:
+```bash
+npm run rules:check
+npm test -- --grep "@Smoke"
+```
+5. If failing, invoke Healer with logs and retry.
+
+## Student Exercise (Take-home)
+
+- Add one `@P1` checkout negative scenario.
+- Keep all locators in `Page` only.
+- Ensure `Module` never uses `.locator()` directly.
+- Pass `rules:check` before submitting PR.

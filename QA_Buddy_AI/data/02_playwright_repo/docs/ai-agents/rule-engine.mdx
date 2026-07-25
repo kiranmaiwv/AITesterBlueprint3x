@@ -1,0 +1,45 @@
+# Rule Engine
+
+This repository now includes a file-and-content validation gate:
+
+- Script: `scripts/rule-engine.js`
+- Config: `rules/framework-rule-engine.json`
+
+## What It Enforces
+
+1. File placement by type:
+- `*Page.ts` -> `src/pages`
+- `*Module.ts` or `*Modal.ts` -> `src/modules`
+- utility classes -> `src/utils`
+- `*.spec.ts` -> `src/tests`
+
+2. Naming conventions by folder.
+
+3. Content safety:
+- modules cannot use `.locator()` directly
+- page objects should use locator arrow functions
+- no `console.log()` in framework code
+- tests should use `test.describe()`
+
+4. Warning signals:
+- missing test tags
+- missing `test.step()`
+
+## Commands
+
+```bash
+npm run rules:check      # full repository scan
+npm run rules:changed    # changed files only
+npm run rules:staged     # staged files only
+```
+
+## Extend Rules
+
+Edit `rules/framework-rule-engine.json`:
+
+1. Add placement mappings in `placementRules`.
+2. Add naming constraints in `folderNamingRules`.
+3. Add content checks in `contentRules`.
+4. Add non-blocking coaching checks in `warningRules`.
+
+This gives you deterministic architecture control before merge.

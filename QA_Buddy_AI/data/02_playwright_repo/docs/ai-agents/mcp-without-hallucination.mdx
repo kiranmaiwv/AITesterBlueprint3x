@@ -1,0 +1,51 @@
+# MCP Without Hallucination
+
+Use MCP as a tool bridge so the LLM reads real browser state before generating code.
+
+## Minimal MCP Server Setup
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+## Why This Reduces Hallucination
+
+1. MCP actions are grounded in browser data.
+2. Playwright MCP defaults to accessibility snapshots for deterministic element targeting.
+3. Agent output is validated by the rule engine before code is accepted.
+
+## Repo-Safe Generation Workflow
+
+1. `Planner` creates scenario matrix and file impact list.
+2. `Generator` writes only in approved folders.
+3. Run `npm run rules:check`.
+4. Execute tests.
+5. `Healer` patches failures with minimal diffs.
+6. Rerun rule engine and tests.
+
+## Guardrail Commands
+
+```bash
+npm run rules:check
+npm run rules:changed
+npm test
+```
+
+## Optional Hardening
+
+`@playwright/mcp` supports browser controls such as:
+
+- `--allowed-origins`
+- `--blocked-origins`
+- `--blocked-resources`
+- `--device`
+- `--storage-state`
+
+Use them in workshops to keep demos deterministic and isolated.

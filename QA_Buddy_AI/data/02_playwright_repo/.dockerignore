@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+
+# Test results (will be mounted as volumes)
+test-results/
+playwright-report/
+tta-report/
+allure-results/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (use docker-compose env vars)
+.env
+.env.local
+.env.*.local
+
+# Documentation (not needed in container)
+docs/
+*.md
+!README.md
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage
+coverage/
+
+# Misc
+.husky/
+.github/
+

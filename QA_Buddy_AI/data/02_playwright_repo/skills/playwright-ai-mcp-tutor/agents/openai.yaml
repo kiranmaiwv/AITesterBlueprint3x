@@ -1,0 +1,4 @@
+version: 1
+display_name: Playwright AI MCP Tutor
+short_description: Teach and enforce Planner/Generator/Healer workflows with MCP and repo guardrails.
+default_prompt: Teach Playwright AI agents and MCP using this repository architecture and enforce rule-engine checks.

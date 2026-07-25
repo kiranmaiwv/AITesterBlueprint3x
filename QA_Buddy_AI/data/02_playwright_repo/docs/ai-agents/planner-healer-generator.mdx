@@ -1,0 +1,63 @@
+# Planner, Generator, Healer
+
+Playwright docs describe three AI agents:
+
+- `Planner`: analyses requirements and proposes the best test strategy.
+- `Generator`: turns plans into concrete test code.
+- `Healer`: fixes flaky or broken tests.
+
+## Operating Contract
+
+Use strict handoffs to avoid random code generation.
+
+1. Planner output format:
+```md
+Feature:
+Risk level:
+Scenarios:
+- ...
+Required pages/modules:
+Test tags:
+```
+
+2. Generator input must include:
+- Planner output
+- Allowed folders (`src/pages`, `src/modules`, `src/tests`, `src/utils`, `src/testdata`)
+- Forbidden actions (no direct locators in modules)
+
+3. Healer input must include:
+- Failing test name
+- Stack trace
+- Screenshot/trace path
+- Rule engine output
+
+## Prompt Templates
+
+### Planner Prompt
+```text
+You are Planner for this repository.
+Design scenarios for: <feature>
+Follow Pages -> Modules -> Tests architecture.
+Return only: scenarios, data, tags, and impacted files.
+```
+
+### Generator Prompt
+```text
+You are Generator for this repository.
+Implement only approved scenarios from Planner.
+Rules:
+- Page object files in src/pages/*Page.ts
+- Module or modal workflows in src/modules/*Module.ts
+- Utils in src/utils
+- Tests in src/tests/*.spec.ts
+- No page.locator in modules
+```
+
+### Healer Prompt
+```text
+You are Healer for this repository.
+Fix failing tests using existing architecture.
+Do not create new folders.
+Prefer minimal code diff.
+After fix, ensure rules:check passes.
+```

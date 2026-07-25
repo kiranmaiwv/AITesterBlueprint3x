@@ -1,0 +1,31 @@
+{
+    "validUser": {
+        "username": "John Doe",
+        "password": "ThisIsNotAPassword"
+    },
+    "invalidUsers": [
+        {
+            "username": "InvalidUser",
+            "password": "WrongPassword",
+            "expectedError": "Login failed"
+        },
+        {
+            "username": "",
+            "password": "",
+            "expectedError": "Login failed"
+        }
+    ],
+    "facilities": [
+        "Tokyo CURA Healthcare Center",
+        "Hongkong CURA Healthcare Center",
+        "Seoul CURA Healthcare Center"
+    ],
+    "healthcarePrograms": ["Medicare", "Medicaid", "None"],
+    "defaultAppointment": {
+        "facility": "Tokyo CURA Healthcare Center",
+        "readmission": false,
+        "program": "Medicare",
+        "visitDate": "25/03/2026",
+        "comment": ""
+    }
+}

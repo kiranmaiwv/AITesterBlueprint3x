@@ -1,0 +1,88 @@
+# Windsurf AI Rules for Playwright Test Automation Framework
+# Author: Pramod Dutta | The Testing Academy
+
+project_type: playwright-test-framework
+language: typescript
+
+## Architecture
+structure:
+  - layer: Pages
+    path: src/pages/
+    purpose: UI locators and basic actions
+    rules:
+      - Locators as arrow functions
+      - No business logic
+      - Single responsibility per method
+  
+  - layer: Modules
+    path: src/modules/
+    purpose: Business logic and workflows
+    rules:
+      - Use Page class methods only
+      - No direct locator access
+      - Include logging
+
+  - layer: Tests
+    path: src/tests/
+    purpose: Test specifications
+    rules:
+      - Use test.step() for reporting
+      - Include priority tags
+      - Use fixtures
+
+## Code Generation Rules
+
+### When creating a Page:
+1. Use arrow functions for locators
+2. Keep actions simple
+3. Add JSDoc comments
+4. Export with named export
+
+### When creating a Module:
+1. Import corresponding Page
+2. Add Logger instance
+3. Create workflow methods
+4. Handle errors gracefully
+
+### When creating a Test:
+1. Use test.describe with tags
+2. Add test.step for steps
+3. Include assertions
+4. Clean up in afterEach
+
+## Naming Conventions
+pages: "{Feature}Page.ts"
+modules: "{Feature}Module.ts"
+tests: "{feature}.spec.ts"
+
+## Required Imports
+```typescript
+// Pages
+import { Page } from '@playwright/test';
+
+// Modules
+import { Page } from '@playwright/test';
+import { Logger } from '@utils/Logger';
+
+// Tests
+import { test, expect } from '@playwright/test';
+```
+
+## Tags
+priority:
+  - "@P0": Critical
+  - "@P1": High
+  - "@P2": Medium
+category:
+  - "@Smoke": Quick validation
+  - "@Regression": Full suite
+feature:
+  - "@Login", "@Checkout", etc.
+
+## Anti-patterns to avoid
+- Hardcoded waits (page.waitForTimeout)
+- Business logic in Pages
+- Locators in Modules
+- console.log in production code
+- Skipping test.step()
+

@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm install && npm run build && python3 -c 'from fastembed import TextEmbedding; TextEmbedding(model_name=\"BAAI/bge-small-en-v1.5\", max_length=512)'",
+  "outputDirectory": "dist",
+  "installCommand": "pip install --break-system-packages -r requirements.txt || pip install -r requirements.txt",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/architecture", "destination": "/architecture.html" },
+    { "source": "/docs", "destination": "/docs.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/index.py": { "maxDuration": 60 }
+  },
+  "env": { "PYTHON_VERSION": "3.12" }
+}

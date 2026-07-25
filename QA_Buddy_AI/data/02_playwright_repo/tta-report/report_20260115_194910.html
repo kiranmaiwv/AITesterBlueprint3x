@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTA Automation Report</title>
+    <style>
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            background-color: #f0fdf4;
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 24px; font-weight: 500; }
+        .header-subtitle { margin-top: 5px; opacity: 0.9; font-size: 14px; }
+        .container { padding: 20px; max-width: 100%; overflow-x: auto; }
+        .meta-section {
+            background: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d1fae5;
+            border-radius: 8px;
+        }
+        .meta-table { width: 100%; }
+        .meta-table td { padding: 5px 10px; }
+        .env-badge {
+            background-color: #10b981;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .browser-badge {
+            background-color: #059669;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+        .suite-status, .run-status {
+            background: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d1fae5;
+            border-radius: 8px;
+        }
+        .suite-status h3, .run-status h3 {
+            color: #065f46;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .status-table td { padding: 3px 10px; }
+        .passed-count { color: #10b981; font-weight: bold; }
+        .failed-count { color: #ef4444; font-weight: bold; }
+        .filters {
+            background: white;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d1fae5;
+            border-radius: 8px;
+        }
+        .filter-group { margin-bottom: 10px; }
+        .filter-group label { margin-left: 15px; cursor: pointer; }
+        .test-table-container {
+            background: white;
+            border: 1px solid #d1fae5;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .test-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .test-table thead { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+        .test-table th {
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid #059669;
+        }
+        .test-table td { padding: 8px; border: 1px solid #d1fae5; vertical-align: middle; }
+        .test-table tbody tr:nth-child(4n+1),
+        .test-table tbody tr:nth-child(4n+2) { background: #ffffff; }
+        .test-table tbody tr:nth-child(4n+3),
+        .test-table tbody tr:nth-child(4n+4) { background: #f0fdf4; }
+        .test-row:hover { background: #d1fae5 !important; }
+        .test-row.failed { background: #fef2f2 !important; }
+        .test-row.failed:hover { background: #fee2e2 !important; }
+        .col-sno { width: 40px; text-align: center; }
+        .col-suite { width: 100px; }
+        .col-testname { min-width: 200px; }
+        .col-author { width: 70px; }
+        .col-group { width: 80px; }
+        .col-tags { min-width: 100px; }
+        .col-file { min-width: 120px; }
+        .col-starttime { width: 140px; white-space: nowrap; }
+        .col-endtime { width: 140px; white-space: nowrap; }
+        .col-duration { width: 70px; text-align: center; }
+        .col-status { width: 80px; text-align: center; }
+        .col-screenshot { width: 70px; text-align: center; }
+        .col-video { width: 70px; text-align: center; }
+        .col-trace { width: 70px; text-align: center; }
+        .test-name-link { color: #059669; cursor: pointer; text-decoration: underline; }
+        .test-name-link:hover { color: #065f46; }
+        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 3px; font-weight: bold; font-size: 10px; }
+        .status-badge.passed { background: #10b981; color: white; }
+        .status-badge.failed { background: #ef4444; color: white; }
+        .status-badge.skipped { background: #9ca3af; color: white; }
+        .test-detail-row { background: #f0fdf4 !important; }
+        .test-detail-row td { padding: 0; }
+        .screenshot-link { color: #059669; text-decoration: none; }
+        .screenshot-link:hover { text-decoration: underline; }
+        .video-link-cell { color: #f59e0b; text-decoration: none; }
+        .video-link-cell:hover { text-decoration: underline; }
+        .trace-link-cell { color: #8b5cf6; text-decoration: none; }
+        .trace-link-cell:hover { text-decoration: underline; }
+        .tag { background: #d1fae5; color: #065f46; padding: 2px 6px; border-radius: 3px; font-size: 10px; margin-left: 4px; }
+        .test-detail { margin: 12px 28px; border: 1px solid #d1fae5; border-radius: 4px; background: #fafafa; }
+        .detail-panel { padding: 0; }
+        .detail-section { border-bottom: 1px solid #d1fae5; }
+        .detail-section:last-child { border-bottom: none; }
+        .section-header {
+            padding: 10px 16px;
+            background: #f0fdf4;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+        .section-header:hover { background: #d1fae5; }
+        .section-arrow { margin-right: 8px; font-size: 10px; color: #065f46; transition: transform 0.2s; }
+        .section-collapsed .section-arrow { transform: rotate(-90deg); }
+        .section-collapsed .section-content { display: none; }
+        .section-content { padding: 16px; }
+        .error-section .section-header { background: #fef2f2; color: #dc2626; }
+        .error-box { background: #fff; border: 1px solid #fecaca; border-radius: 4px; padding: 12px; }
+        .error-message { margin: 0; color: #dc2626; font-size: 12px; white-space: pre-wrap; word-break: break-word; }
+        .stack-details { margin-top: 12px; }
+        .stack-details summary { cursor: pointer; color: #666; font-size: 12px; }
+        .stack-trace-content {
+            margin: 8px 0 0 0; padding: 12px; background: #1e293b; color: #a7f3d0;
+            font-size: 11px; border-radius: 4px; overflow-x: auto; max-height: 300px; overflow-y: auto;
+        }
+        .steps-list { background: white; border-radius: 4px; }
+        .step-item { display: flex; align-items: center; padding: 8px 12px; border-bottom: 1px solid #d1fae5; }
+        .step-item:last-child { border-bottom: none; }
+        .step-item.failed { background: #fef2f2; }
+        .step-icon { width: 20px; margin-right: 8px; }
+        .step-icon.passed { color: #10b981; }
+        .step-icon.failed { color: #ef4444; }
+        .step-name { flex: 1; font-size: 12px; color: #333; }
+        .step-time { color: #666; font-size: 11px; min-width: 60px; text-align: right; }
+        .step-item-container { border-bottom: 1px solid #d1fae5; }
+        .step-item-container:last-child { border-bottom: none; }
+        .step-item.expandable { cursor: pointer; }
+        .step-item.expandable:hover { background: #f0fdf4; }
+        .step-expand-icon { width: 16px; font-size: 10px; color: #065f46; margin-right: 4px; transition: transform 0.2s; }
+        .step-item.expanded .step-expand-icon { transform: rotate(90deg); }
+        .step-details { background: #fafafa; border-top: 1px solid #d1fae5; padding: 12px 16px 12px 44px; font-size: 12px; }
+        .step-meta { display: flex; gap: 20px; color: #666; font-size: 11px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed #d1fae5; }
+        .step-console { margin-bottom: 12px; }
+        .step-console-header { font-weight: 600; color: #333; margin-bottom: 8px; }
+        .step-console-content {
+            background: #1e293b; color: #a7f3d0; padding: 12px; border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', monospace; font-size: 11px; line-height: 1.5;
+            max-height: 300px; overflow-y: auto; white-space: pre-wrap; word-break: break-word;
+        }
+        .console-line { padding: 2px 0; border-bottom: 1px solid #334155; }
+        .console-line:last-child { border-bottom: none; }
+        .step-screenshot { margin-bottom: 12px; }
+        .step-screenshot-header { font-weight: 600; color: #333; margin-bottom: 8px; }
+        .step-screenshot-img { max-width: 100%; max-height: 200px; border: 1px solid #d1fae5; border-radius: 4px; }
+        .step-error { margin-bottom: 12px; }
+        .step-error-header { font-weight: 600; color: #ef4444; margin-bottom: 8px; }
+        .step-error-message { background: #fef2f2; color: #dc2626; padding: 12px; border-radius: 4px; font-family: 'Monaco', 'Menlo', monospace; font-size: 11px; white-space: pre-wrap; }
+        .step-stack-trace { margin-top: 8px; }
+        .step-stack-header { font-weight: 600; color: #f59e0b; margin-bottom: 8px; }
+        .step-stack-content { background: #fffbeb; color: #b45309; padding: 12px; border-radius: 4px; font-family: 'Monaco', 'Menlo', monospace; font-size: 10px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; margin: 0; }
+        .screenshots-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .screenshot-item { background: white; border: 1px solid #d1fae5; border-radius: 4px; overflow: hidden; }
+        .screenshot-preview { width: 100%; height: 150px; object-fit: cover; display: block; }
+        .screenshot-name { padding: 8px; font-size: 11px; color: #666; border-top: 1px solid #d1fae5; }
+        .trace-download { display: inline-block; padding: 8px 16px; background: #d1fae5; color: #065f46; text-decoration: none; border-radius: 4px; font-size: 12px; }
+        .trace-download:hover { background: #a7f3d0; }
+        .test-video { max-width: 100%; max-height: 400px; border-radius: 4px; }
+        .video-link { margin-top: 8px; font-size: 12px; }
+        .video-link a { color: #059669; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .modal-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; cursor: pointer; }
+        .modal-close:hover { color: #10b981; }
+        .report-footer { text-align: center; padding: 20px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; margin-top: 20px; }
+        .report-footer a { color: #d1fae5; text-decoration: none; }
+        .report-footer a:hover { text-decoration: underline; }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎭 TTA Automation Report</h1>
+        <p class="header-subtitle">The Testing Academy - Playwright Framework</p>
+    </div>
+
+    <div class="container">
+        
+        <div class="meta-section">
+            <table class="meta-table">
+                <tr>
+                    <td><strong>Environment:</strong></td>
+                    <td class="env-badge">UAT</td>
+                    <td><strong>Browser:</strong></td>
+                    <td class="browser-badge">chromium</td>
+                    <td><strong>Version:</strong></td>
+                    <td>Latest</td>
+                    <td><strong>Platform:</strong></td>
+                    <td>Mac</td>
+                    <td><strong>Total Tests:</strong></td>
+                    <td>6</td>
+                    <td><strong>Workers:</strong></td>
+                    <td>3</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="suite-status">
+            <h3>Suite Status</h3>
+            <table class="status-table">
+                <tr>
+                    <td><strong>Total passed:</strong></td>
+                    <td class="passed-count">5</td>
+                </tr>
+                <tr>
+                    <td><strong>Total failed:</strong></td>
+                    <td class="failed-count">1</td>
+                </tr>
+                <tr>
+                    <td><strong>Framework:</strong></td>
+                    <td>Playwright + TypeScript</td>
+                </tr>
+                <tr>
+                    <td><strong>Run ID:</strong></td>
+                    <td>20260115_194910</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="run-status">
+            <h3>Run Status</h3>
+            <table class="status-table">
+                <tr>
+                    <td><strong>Project:</strong></td>
+                    <td>TTA Automation</td>
+                    <td><strong>Tests Executed:</strong></td>
+                    <td>6</td>
+                </tr>
+            </table>
+            <p><strong>Start:</strong> Jan 15, 2026, 19:49:10 | <strong>End:</strong> Jan 15, 2026, 19:50:14 | <strong>Duration:</strong> 1m 4s</p>
+        </div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <strong>Filter By Priority:</strong>
+                <label><input type="checkbox" class="group-filter" value="all" checked onchange="filterByGroup(this)"> All</label>
+                <label><input type="checkbox" class="group-filter" value="p0" onchange="filterByGroup(this)"> P0</label>
+                <label><input type="checkbox" class="group-filter" value="p1" onchange="filterByGroup(this)"> P1</label>
+                <label><input type="checkbox" class="group-filter" value="smoke" onchange="filterByGroup(this)"> Smoke</label>
+            </div>
+            <div class="filter-group">
+                <strong>Filter By Status:</strong>
+                <label><input type="checkbox" class="status-filter" value="all" checked onchange="filterByStatus(this)"> All</label>
+                <label><input type="checkbox" class="status-filter" value="passed" onchange="filterByStatus(this)"> ✅ Passed</label>
+                <label><input type="checkbox" class="status-filter" value="failed" onchange="filterByStatus(this)"> ❌ Failed</label>
+                <label><input type="checkbox" class="status-filter" value="skipped" onchange="filterByStatus(this)"> ⏭️ Skipped</label>
+            </div>
+        </div>
+        <div class="test-table-container">
+        <table class="test-table">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Suite</th>
+                    <th>Test Name</th>
+                    <th>Author</th>
+                    <th>Priority</th>
+                    <th>Tags</th>
+                    <th>File</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Screenshot</th>
+                    <th>Video</th>
+                    <th>Trace</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="test-row passed" data-test-id="test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4" data-tags="@p0">
+                    <td class="col-sno">1</td>
+                    <td class="col-suite">chromium</td>
+                    <td class="col-testname">
+                        <span class="test-name-link" onclick="toggleTestDetail('test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4')">@P0 should load homepage successfully</span>
+                    </td>
+                    <td class="col-author">TTA-QA</td>
+                    <td class="col-group">@P0</td>
+                    <td class="col-tags"><span class="tag">@P0</span></td>
+                    <td class="col-file">tta-sample.spec.ts:17</td>
+                    <td class="col-starttime">Jan 15, 2026, 19:49:10</td>
+                    <td class="col-endtime">Jan 15, 2026, 19:49:14</td>
+                    <td class="col-duration">4s</td>
+                    <td class="col-status"><span class="status-badge passed">Passed</span></td>
+                    <td class="col-screenshot">
+                        N/A
+                    </td>
+                    <td class="col-video">
+                        N/A
+                    </td>
+                    <td class="col-trace">
+                        N/A
+                    </td>
+                </tr>
+                <tr class="test-detail-row" id="detail-row-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4" style="display: none;">
+                    <td colspan="14">
+                        <div class="test-detail" id="detail-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4">
+                            <div class="detail-panel">
+            <div class="detail-section steps-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Test Steps
+                </div>
+                <div class="section-content">
+                    <div class="steps-list">
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4-0-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Verify page title</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4-0-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:17 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:06.29 - 0:06.30</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4-1-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Verify page URL</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4-1-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:17 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:06.30 - 0:06.30</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4-2-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Take screenshot of homepage</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-bd22787d7909a4956bb4-2-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:17 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:06.30 - 0:06.34</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="test-row passed" data-test-id="test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6" data-tags="@p1">
+                    <td class="col-sno">2</td>
+                    <td class="col-suite">chromium</td>
+                    <td class="col-testname">
+                        <span class="test-name-link" onclick="toggleTestDetail('test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6')">@P1 should have proper SEO elements</span>
+                    </td>
+                    <td class="col-author">TTA-QA</td>
+                    <td class="col-group">@P1</td>
+                    <td class="col-tags"><span class="tag">@P1</span></td>
+                    <td class="col-file">tta-sample.spec.ts:56</td>
+                    <td class="col-starttime">Jan 15, 2026, 19:49:10</td>
+                    <td class="col-endtime">Jan 15, 2026, 19:49:16</td>
+                    <td class="col-duration">5s</td>
+                    <td class="col-status"><span class="status-badge passed">Passed</span></td>
+                    <td class="col-screenshot">
+                        N/A
+                    </td>
+                    <td class="col-video">
+                        N/A
+                    </td>
+                    <td class="col-trace">
+                        N/A
+                    </td>
+                </tr>
+                <tr class="test-detail-row" id="detail-row-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6" style="display: none;">
+                    <td colspan="14">
+                        <div class="test-detail" id="detail-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6">
+                            <div class="detail-panel">
+            <div class="detail-section steps-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Test Steps
+                </div>
+                <div class="section-content">
+                    <div class="steps-list">
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6-0-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Check meta description</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6-0-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:18 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:07.72 - 0:07.74</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6-1-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Check Open Graph tags</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6-1-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:18 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:07.74 - 0:07.75</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6-2-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Verify favicon exists</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-09a96d0aad345eb900e6-2-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:18 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:07.75 - 0:07.77</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="test-row passed" data-test-id="test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2" data-tags="@p2">
+                    <td class="col-sno">3</td>
+                    <td class="col-suite">chromium</td>
+                    <td class="col-testname">
+                        <span class="test-name-link" onclick="toggleTestDetail('test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2')">@P2 should be responsive</span>
+                    </td>
+                    <td class="col-author">TTA-QA</td>
+                    <td class="col-group">@P2</td>
+                    <td class="col-tags"><span class="tag">@P2</span></td>
+                    <td class="col-file">tta-sample.spec.ts:77</td>
+                    <td class="col-starttime">Jan 15, 2026, 19:49:10</td>
+                    <td class="col-endtime">Jan 15, 2026, 19:49:16</td>
+                    <td class="col-duration">5s</td>
+                    <td class="col-status"><span class="status-badge passed">Passed</span></td>
+                    <td class="col-screenshot">
+                        N/A
+                    </td>
+                    <td class="col-video">
+                        N/A
+                    </td>
+                    <td class="col-trace">
+                        N/A
+                    </td>
+                </tr>
+                <tr class="test-detail-row" id="detail-row-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2" style="display: none;">
+                    <td colspan="14">
+                        <div class="test-detail" id="detail-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2">
+                            <div class="detail-panel">
+            <div class="detail-section steps-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Test Steps
+                </div>
+                <div class="section-content">
+                    <div class="steps-list">
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-0-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Test desktop viewport</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-0-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:21 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:04.16 - 0:04.69</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-1-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Test tablet viewport</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-1-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:21 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:04.69 - 0:05.22</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-2-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Test mobile viewport</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-2-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:22 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:05.22 - 0:05.75</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-3-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Verify page is still functional</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-7bafa2b6b5fc9696aad2-3-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:22 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:05.75 - 0:05.80</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="test-row passed" data-test-id="test-6aaf00161be373ff9c4d-5c455d9487b1dff92290" data-tags="@p2">
+                    <td class="col-sno">4</td>
+                    <td class="col-suite">chromium</td>
+                    <td class="col-testname">
+                        <span class="test-name-link" onclick="toggleTestDetail('test-6aaf00161be373ff9c4d-5c455d9487b1dff92290')">@P2 should verify footer content</span>
+                    </td>
+                    <td class="col-author">TTA-QA</td>
+                    <td class="col-group">@P2</td>
+                    <td class="col-tags"><span class="tag">@P2</span></td>
+                    <td class="col-file">tta-sample.spec.ts:132</td>
+                    <td class="col-starttime">Jan 15, 2026, 19:49:10</td>
+                    <td class="col-endtime">Jan 15, 2026, 19:49:15</td>
+                    <td class="col-duration">4s</td>
+                    <td class="col-status"><span class="status-badge passed">Passed</span></td>
+                    <td class="col-screenshot">
+                        N/A
+                    </td>
+                    <td class="col-video">
+                        N/A
+                    </td>
+                    <td class="col-trace">
+                        N/A
+                    </td>
+                </tr>
+                <tr class="test-detail-row" id="detail-row-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290" style="display: none;">
+                    <td colspan="14">
+                        <div class="test-detail" id="detail-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290">
+                            <div class="detail-panel">
+            <div class="detail-section steps-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Test Steps
+                </div>
+                <div class="section-content">
+                    <div class="steps-list">
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290-0-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Scroll to footer</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290-0-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:27 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:04.03 - 0:04.54</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290-1-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Verify footer exists</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290-1-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:27 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:04.54 - 0:04.57</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290-2-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Take footer screenshot</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-5c455d9487b1dff92290-2-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:27 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:04.57 - 0:04.61</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="test-row passed" data-test-id="test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90" data-tags="@p1">
+                    <td class="col-sno">5</td>
+                    <td class="col-suite">chromium</td>
+                    <td class="col-testname">
+                        <span class="test-name-link" onclick="toggleTestDetail('test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90')">@P1 should measure page performance</span>
+                    </td>
+                    <td class="col-author">TTA-QA</td>
+                    <td class="col-group">@P1</td>
+                    <td class="col-tags"><span class="tag">@P1</span></td>
+                    <td class="col-file">tta-sample.spec.ts:103</td>
+                    <td class="col-starttime">Jan 15, 2026, 19:49:10</td>
+                    <td class="col-endtime">Jan 15, 2026, 19:49:19</td>
+                    <td class="col-duration">9s</td>
+                    <td class="col-status"><span class="status-badge passed">Passed</span></td>
+                    <td class="col-screenshot">
+                        N/A
+                    </td>
+                    <td class="col-video">
+                        N/A
+                    </td>
+                    <td class="col-trace">
+                        N/A
+                    </td>
+                </tr>
+                <tr class="test-detail-row" id="detail-row-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90" style="display: none;">
+                    <td colspan="14">
+                        <div class="test-detail" id="detail-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90">
+                            <div class="detail-panel">
+            <div class="detail-section steps-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Test Steps
+                </div>
+                <div class="section-content">
+                    <div class="steps-list">
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90-0-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Measure page load time</span>
+                            <span class="step-time">2s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90-0-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:23 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 2s</span>
+                                <span class="step-meta-item">🎬 Video: 0:05.02 - 0:07.47</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90-1-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Check for JavaScript errors</span>
+                            <span class="step-time">2s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90-1-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:26 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 2s</span>
+                                <span class="step-meta-item">🎬 Video: 0:07.47 - 0:09.49</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="step-item-container">
+                        <div class="step-item passed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90-2-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon passed">✓</span>
+                            <span class="step-name">Verify no console errors</span>
+                            <span class="step-time">0s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-9e5afc3d7ef672e84b90-2-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:28 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 0s</span>
+                                <span class="step-meta-item">🎬 Video: 0:09.49 - 0:09.49</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="test-row failed" data-test-id="test-6aaf00161be373ff9c4d-289a13aa1ae1ee79ce76" data-tags="@p1">
+                    <td class="col-sno">6</td>
+                    <td class="col-suite">chromium</td>
+                    <td class="col-testname">
+                        <span class="test-name-link" onclick="toggleTestDetail('test-6aaf00161be373ff9c4d-289a13aa1ae1ee79ce76')">@P1 should display main navigation</span>
+                    </td>
+                    <td class="col-author">TTA-QA</td>
+                    <td class="col-group">@P1</td>
+                    <td class="col-tags"><span class="tag">@P1</span></td>
+                    <td class="col-file">tta-sample.spec.ts:36</td>
+                    <td class="col-starttime">Jan 15, 2026, 19:49:10</td>
+                    <td class="col-endtime">Jan 15, 2026, 19:50:11</td>
+                    <td class="col-duration">1m 1s</td>
+                    <td class="col-status"><span class="status-badge failed">Failed</span></td>
+                    <td class="col-screenshot">
+                        <a href="screenshots/screenshot_6_1.png" target="_blank" class="screenshot-link">📷 View</a>
+                    </td>
+                    <td class="col-video">
+                        <a href="videos/video_6.webm" target="_blank" class="video-link-cell">▶️ Play</a>
+                    </td>
+                    <td class="col-trace">
+                        <a href="traces/trace_6.zip" target="_blank" class="trace-link-cell">📁 View</a>
+                    </td>
+                </tr>
+                <tr class="test-detail-row" id="detail-row-test-6aaf00161be373ff9c4d-289a13aa1ae1ee79ce76" style="display: none;">
+                    <td colspan="14">
+                        <div class="test-detail" id="detail-test-6aaf00161be373ff9c4d-289a13aa1ae1ee79ce76">
+                            <div class="detail-panel">
+            <div class="detail-section error-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Errors
+                </div>
+                <div class="section-content">
+                    <div class="error-box">
+                        <pre class="error-message">[31mTest timeout of 60000ms exceeded.[39m</pre>
+                        <details class="stack-details"><summary>Call Stack</summary><pre class="stack-trace-content">[31mTest timeout of 60000ms exceeded.[39m</pre></details>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-section steps-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Test Steps
+                </div>
+                <div class="section-content">
+                    <div class="steps-list">
+                    <div class="step-item-container">
+                        <div class="step-item failed expandable" onclick="toggleStepDetails(this, 'step-test-6aaf00161be373ff9c4d-289a13aa1ae1ee79ce76-0-details')">
+                            <span class="step-expand-icon">▶</span>
+                            <span class="step-icon failed">✗</span>
+                            <span class="step-name">Wait for page to load completely</span>
+                            <span class="step-time">56s</span>
+                        </div>
+                        <div id="step-test-6aaf00161be373ff9c4d-289a13aa1ae1ee79ce76-0-details" class="step-details" style="display: none;">
+                            <div class="step-meta">
+                                <span class="step-meta-item">⏱️ Started: 7:49:17 PM</span>
+                                <span class="step-meta-item">⏳ Duration: 56s</span>
+                                <span class="step-meta-item">🎬 Video: 0:06.98 - 1:03.00</span>
+                            </div>
+                            <div class="step-error">
+                                <div class="step-error-header">❌ Error</div>
+                                <div class="step-error-message">Error: page.waitForLoadState: Test timeout of 60000ms exceeded.</div>
+                            </div>
+                            <div class="step-stack-trace">
+                                <div class="step-stack-header">📜 Stack Trace</div>
+                                <pre class="step-stack-content">Error: page.waitForLoadState: Test timeout of 60000ms exceeded.
+    at /Users/pdutta/Documents/learnai/Playwright_Framework/src/tests/tta-sample.spec.ts:38:24
+    at /Users/pdutta/Documents/learnai/Playwright_Framework/src/tests/tta-sample.spec.ts:37:20</pre>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-section screenshots-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Screenshots
+                </div>
+                <div class="section-content">
+                    <div class="screenshots-grid">
+                    <div class="screenshot-item">
+                        <a href="screenshots/screenshot_6_1.png" target="_blank" class="screenshot-link">
+                            <img src="screenshots/screenshot_6_1.png" alt="screenshot" class="screenshot-preview"/>
+                        </a>
+                        <div class="screenshot-name">📎 screenshot</div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-section traces-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Traces
+                </div>
+                <div class="section-content">
+                    <a href="traces/trace_6.zip" download class="trace-download">📁 trace</a>
+                </div>
+            </div>
+            <div class="detail-section videos-section">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <span class="section-arrow">▼</span> Videos
+                </div>
+                <div class="section-content">
+                    <video controls class="test-video" src="videos/video_6.webm"></video>
+                    <div class="video-link"><a href="videos/video_6.webm" target="_blank">📎 video</a></div>
+                </div>
+            </div></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <div id="screenshotModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img id="modalImage" class="modal-content" src="" alt="Screenshot">
+    </div>
+
+    <footer class="report-footer">
+        <p>Built with ❤️ by <a href="https://thetestingacademy.com" target="_blank">Pramod Dutta</a> | <a href="https://thetestingacademy.com" target="_blank">The Testing Academy</a></p>
+    </footer>
+
+    <script>
+        
+        function toggleFileGroup(header) {
+            const fileGroup = header.parentElement;
+            fileGroup.classList.toggle('collapsed');
+        }
+
+        function toggleTestDetail(testId) {
+            const detailRow = document.getElementById('detail-row-' + testId);
+            if (detailRow) {
+                detailRow.style.display = detailRow.style.display === 'none' ? 'table-row' : 'none';
+            }
+        }
+
+        function toggleSection(header) {
+            const section = header.parentElement;
+            section.classList.toggle('section-collapsed');
+        }
+
+        function toggleStepDetails(stepElement, detailsId) {
+            const details = document.getElementById(detailsId);
+            if (details) {
+                if (details.style.display === 'none') {
+                    details.style.display = 'block';
+                    stepElement.classList.add('expanded');
+                } else {
+                    details.style.display = 'none';
+                    stepElement.classList.remove('expanded');
+                }
+            }
+        }
+
+        function filterByStatus(checkbox) {
+            const allCheckbox = document.querySelector('.status-filter[value="all"]');
+            if (checkbox.value === 'all') {
+                if (checkbox.checked) {
+                    document.querySelectorAll('.status-filter:not([value="all"])').forEach(cb => cb.checked = false);
+                }
+            } else {
+                if (checkbox.checked && allCheckbox) {
+                    allCheckbox.checked = false;
+                }
+                const anyChecked = document.querySelectorAll('.status-filter:not([value="all"]):checked').length > 0;
+                if (!anyChecked && allCheckbox) {
+                    allCheckbox.checked = true;
+                }
+            }
+            applyFilters();
+        }
+
+        function filterByGroup(checkbox) {
+            const allCheckbox = document.querySelector('.group-filter[value="all"]');
+            if (checkbox.value === 'all') {
+                if (checkbox.checked) {
+                    document.querySelectorAll('.group-filter:not([value="all"])').forEach(cb => cb.checked = false);
+                }
+            } else {
+                if (checkbox.checked && allCheckbox) {
+                    allCheckbox.checked = false;
+                }
+                const anyChecked = document.querySelectorAll('.group-filter:not([value="all"]):checked').length > 0;
+                if (!anyChecked && allCheckbox) {
+                    allCheckbox.checked = true;
+                }
+            }
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const statusAll = document.querySelector('.status-filter[value="all"]')?.checked;
+            const groupAll = document.querySelector('.group-filter[value="all"]')?.checked;
+            const statusFilters = Array.from(document.querySelectorAll('.status-filter:not([value="all"]):checked')).map(f => f.value);
+            const groupFilters = Array.from(document.querySelectorAll('.group-filter:not([value="all"]):checked')).map(f => f.value);
+
+            document.querySelectorAll('.test-row').forEach(row => {
+                let statusMatch = statusAll;
+                if (!statusMatch) {
+                    const rowStatus = row.classList.contains('passed') ? 'passed' :
+                                       row.classList.contains('failed') ? 'failed' : 'skipped';
+                    statusMatch = statusFilters.includes(rowStatus);
+                }
+
+                let groupMatch = groupAll;
+                if (!groupMatch) {
+                    const tags = row.getAttribute('data-tags') || '';
+                    groupMatch = groupFilters.some(g => tags.toLowerCase().includes(g.toLowerCase()));
+                }
+
+                const testId = row.getAttribute('data-test-id');
+                const detailRow = document.getElementById('detail-row-' + testId);
+
+                row.style.display = (statusMatch && groupMatch) ? '' : 'none';
+                if (detailRow && detailRow.style.display !== 'none') {
+                    detailRow.style.display = (statusMatch && groupMatch) ? 'table-row' : 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('screenshotModal');
+            const modalImg = document.getElementById('modalImage');
+            const closeBtn = document.querySelector('.modal-close');
+
+            document.querySelectorAll('.screenshot-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (modal && modalImg) {
+                        modal.classList.add('active');
+                        modalImg.src = this.href;
+                    }
+                });
+            });
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    modal.classList.remove('active');
+                });
+            }
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            }
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal) {
+                    modal.classList.remove('active');
+                }
+            });
+
+            // Auto-expand failed tests
+            document.querySelectorAll('.test-row.failed').forEach(row => {
+                const testId = row.getAttribute('data-test-id');
+                if (testId) {
+                    toggleTestDetail(testId);
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Buddy AI — Documentation</title>
+<style>
+  :root { --bg: #0f1117; --surface: #1a1d27; --s2: #252836; --border: #2e3144; --text: #e1e4ed; --dim: #8b8fa3; --accent: #6c5ce7; --success: #00b894; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.7; }
+  .nav { position: fixed; top: 0; left: 0; width: 240px; height: 100vh; background: var(--surface); border-right: 1px solid var(--border); padding: 24px; overflow-y: auto; }
+  .nav h3 { font-size: 13px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .nav a { display: block; color: var(--dim); text-decoration: none; font-size: 13px; padding: 6px 0; transition: color 0.2s; }
+  .nav a:hover { color: var(--accent); }
+  .content { margin-left: 240px; padding: 40px 48px; max-width: 860px; }
+  h1 { font-size: 32px; margin-bottom: 4px; }
+  h2 { font-size: 22px; margin: 40px 0 16px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  p { margin-bottom: 12px; font-size: 14px; }
+  ul, ol { margin-bottom: 16px; padding-left: 24px; font-size: 14px; }
+  li { margin-bottom: 4px; }
+  code { background: var(--s2); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: var(--s2); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 16px 0; border: 1px solid var(--border); font-size: 13px; }
+  .badge { display: inline-block; background: var(--accent); color: white; font-size: 11px; padding: 2px 10px; border-radius: 99px; margin-right: 6px; }
+  .badge-green { background: var(--success); }
+  .file-tree { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin: 16px 0; font-family: monospace; font-size: 13px; line-height: 1.8; }
+  .file-tree .dir { color: var(--accent); }
+  .file-tree .file { color: var(--dim); padding-left: 20px; }
+  .file-tree .highlight { color: var(--text); }
+  blockquote { border-left: 3px solid var(--accent); padding-left: 16px; margin: 16px 0; color: var(--dim); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="nav">
+  <h3>QA Buddy AI Docs</h3>
+  <a href="#overview">Overview</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#backend">Backend Implementation</a>
+  <a href="#frontend">Frontend Implementation</a>
+  <a href="#rag">RAG Pipeline</a>
+  <a href="#ingestion">Data Ingestion</a>
+  <a href="#chunking">Chunking Strategy</a>
+  <a href="#deployment">Deployment</a>
+  <a href="#file-structure">File Structure</a>
+</div>
+
+<div class="content">
+  <h1>QA Buddy AI <span class="badge badge-green">v1.0</span></h1>
+  <p style="color:var(--dim);margin-bottom:32px;">Hybrid Retrieval-Augmented Generation for QA Engineering Teams</p>
+
+  <section id="overview">
+    <h2>Overview</h2>
+    <p>QA Buddy AI is a <strong>Hybrid RAG system</strong> built for QA engineering teams. It allows engineers to ask natural language questions and get cited answers grounded in their actual codebases — Selenium frameworks, Playwright tests, JIRA tickets, test case repositories, PRDs, meeting notes, and Jenkins logs.</p>
+    <h3>Key Capabilities</h3>
+    <ul>
+      <li><strong>Multi-source RAG</strong> — 10 data sources indexed into a single vector database</li>
+      <li><strong>Cited answers</strong> — Every response includes source references with folder and file paths</li>
+      <li><strong>Streaming responses</strong> — Real-time token-by-token answers via Server-Sent Events</li>
+      <li><strong>JIRA integration</strong> — Fetch tickets via JQL, index them, and query across them</li>
+      <li><strong>Code-aware chunking</strong> — Semantic chunking per function/class, not arbitrary character splits</li>
+      <li><strong>Deployed on Vercel</strong> — Serverless backend, globally distributed static frontend</li>
+    </ul>
+  </section>
+
+  <section id="architecture">
+    <h2>Architecture</h2>
+    <p>The system follows a <strong>three-tier architecture</strong> adapted for Vercel's serverless model:</p>
+    <ul>
+      <li><strong>Frontend</strong> — React 19 + Vite SPA deployed as static files on Vercel's CDN</li>
+      <li><strong>API</strong> — Python Flask serverless function via Vercel's Python runtime</li>
+      <li><strong>Cloud Services</strong> — GROQ (LLM), OpenAI (embeddings), Qdrant Cloud (vector DB), JIRA Cloud (tickets)</li>
+    </ul>
+    <p>Unlike a Docker-based deployment, there are <strong>no local services</strong> running. All heavy computation (embeddings, LLM inference, vector search) is handled by managed cloud APIs. This makes the system zero-maintenance and globally scalable.</p>
+    <p>The ingestion pipeline runs <strong>locally</strong> via <code>scripts/seed_qdrant.py</code>, which reads the 10 data folders, chunks each file, generates embeddings via OpenAI, and pushes the vectors to Qdrant Cloud.</p>
+  </section>
+
+  <section id="backend">
+    <h2>Backend Implementation</h2>
+    <p>The backend is a <strong>Flask application</strong> served as a single Python file at <code>api/index.py</code>. This is the standard Vercel Python serverless pattern.</p>
+
+    <h3>API Endpoints</h3>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
+      <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;color:var(--dim);">Endpoint</th><th style="text-align:left;padding:8px;color:var(--dim);">Method</th><th style="text-align:left;padding:8px;color:var(--dim);">Purpose</th></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>/api/health</code></td><td style="padding:8px;">GET</td><td style="padding:8px;">System status with service connectivity checks</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>/api/chat</code></td><td style="padding:8px;">POST</td><td style="padding:8px;">Main endpoint — query → embed → search → prompt → stream</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>/api/settings</code></td><td style="padding:8px;">GET</td><td style="padding:8px;">Read-only config status (keys masked)</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>/api/sources</code></td><td style="padding:8px;">GET</td><td style="padding:8px;">Indexed document count</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>/api/jira/test</code></td><td style="padding:8px;">POST</td><td style="padding:8px;">Test JIRA connection with custom JQL</td></tr>
+    </table>
+
+    <h3>Chat Streaming (SSE)</h3>
+    <p>The <code>/api/chat</code> endpoint uses <strong>Server-Sent Events</strong> to stream the response. The flow is:</p>
+    <ol>
+      <li>Receive <code>{query, history}</code> from the frontend</li>
+      <li>Embed the query via <strong>OpenAI text-embedding-3-small</strong></li>
+      <li>Search <strong>Qdrant Cloud</strong> for the top-4 most relevant chunks</li>
+      <li>Build a GROQ prompt with system instructions, retrieved context, conversation history, and the query</li>
+      <li>Stream the LLM response token-by-token as <code>data: {"type":"token","content":"..."}</code></li>
+      <li>After completion, send <code>data: {"type":"sources","content":[...]}</code> with source metadata</li>
+    </ol>
+
+    <h3>Environment Configuration</h3>
+    <p>All configuration is managed via environment variables. On Vercel, these are set in the dashboard. For local development, a <code>.env</code> file is supported.</p>
+    <pre>GROQ_API_KEY     # LLM inference (mixtral-8x7b)
+OPENAI_API_KEY   # Embeddings (text-embedding-3-small)
+QDRANT_URL       # Vector DB endpoint (cloud.qdrant.io)
+QDRANT_API_KEY   # Qdrant Cloud API key
+JIRA_URL         # JIRA instance URL
+JIRA_EMAIL       # JIRA account email
+JIRA_API_TOKEN   # JIRA API token
+JIRA_JQL         # Default JQL query</pre>
+  </section>
+
+  <section id="frontend">
+    <h2>Frontend Implementation</h2>
+    <p>The frontend is a <strong>React 19 + TypeScript</strong> single-page application built with <strong>Vite 6</strong>. It's deployed as static assets on Vercel's CDN, with all <code>/api/*</code> requests proxied to the Python serverless function via <code>vercel.json</code> rewrites.</p>
+
+    <h3>Component Architecture</h3>
+    <ul>
+      <li><strong>App.tsx</strong> — Root component, manages GROQ key state</li>
+      <li><strong>ChatWindow.tsx</strong> — Message list + header with settings button + empty state with example queries</li>
+      <li><strong>ChatInput.tsx</strong> — Auto-resizing textarea with Enter-to-submit, Shift+Enter for newline</li>
+      <li><strong>SourceCard.tsx</strong> — Grid of cited sources with file path, folder label, confidence score</li>
+      <li><strong>SettingsPanel.tsx</strong> — Modal overlay with System status tab and Connection configuration tab</li>
+    </ul>
+
+    <h3>SSE Client</h3>
+    <p>Chat streaming uses the <strong>Fetch API</strong> with <code>response.body.getReader()</code> to read the SSE stream. The <code>streamChat</code> generator function in <code>src/api/chat.ts</code> yields parsed events, which are consumed by the <code>useChat</code> hook to update message state.</p>
+    <pre>export async function* streamChat(query, history) {
+  const response = await fetch('/api/chat', { method:'POST', body: JSON.stringify({query, history}) })
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+    buffer += decoder.decode(value, { stream: true })
+    for (const line of buffer.split('\n')) {
+      if (!line.startsWith('data: ')) continue
+      yield JSON.parse(line.slice(6))
+    }
+    buffer = ''
+  }
+}</pre>
+  </section>
+
+  <section id="rag">
+    <h2>RAG Pipeline</h2>
+    <p>The RAG pipeline is intentionally simple but effective, using API-based services instead of local models:</p>
+
+    <h3>1. Query Embedding</h3>
+    <p>The user's question is embedded using <strong>OpenAI text-embedding-3-small</strong> (768 dimensions). This model was selected over alternatives because it requires <strong>zero local compute</strong> — it's a simple API call, making it ideal for Vercel's serverless constraints.</p>
+
+    <h3>2. Vector Search</h3>
+    <p>The query vector is sent to <strong>Qdrant Cloud</strong>, which performs a cosine similarity search against all indexed chunks. The top 4 most semantically similar chunks are returned, each with its payload metadata (file path, folder ID, source type).</p>
+
+    <h3>3. Prompt Construction</h3>
+    <p>The retrieved chunks are formatted with source citations and combined with the system prompt, conversation history, and user query into a GROQ API call:</p>
+    <pre>SYSTEM: You are QA Buddy AI, a senior QA engineering assistant...
+CONTEXT:
+[Source 1 - selenium_repo/login_tests.py | Folder: 01]
+...
+[Source 2 - jira_tickets/BUG-421.json | Folder: 04]
+...
+HISTORY: (last 6 messages)
+QUERY: How do I handle OAuth2 login in Selenium?</pre>
+
+    <h3>4. LLM Generation</h3>
+    <p>GROQ's <strong>mixtral-8x7b-32768</strong> generates the answer with a 32K context window, temperature 0.1 for deterministic outputs, and up to 4096 completion tokens. The response is streamed back to the frontend via SSE.</p>
+  </section>
+
+  <section id="ingestion">
+    <h2>Data Ingestion</h2>
+    <p>Ingestion runs as a <strong>local Python script</strong> (<code>scripts/seed_qdrant.py</code>) — not on Vercel. This is because:</p>
+    <ul>
+      <li>Vercel serverless functions have a <strong>50MB payload limit</strong> and <strong>30s timeout</strong></li>
+      <li>Processing 5000+ test cases, code files, and PDFs requires more time and memory</li>
+      <li>The script only needs to run when data changes, not on every request</li>
+    </ul>
+
+    <h3>Ingestion Flow</h3>
+    <ol>
+      <li>Read all files from the 10 data folders</li>
+      <li>Chunk each file based on its type (code by function, CSV per row, MD by heading, etc.)</li>
+      <li>Generate embeddings via <strong>OpenAI batch API</strong> (20 at a time)</li>
+      <li>Build <code>PointStruct</code> objects with chunk text + metadata</li>
+      <li>Upsert all points to <strong>Qdrant Cloud</strong> collection</li>
+    </ol>
+
+    <h3>Metadata Schema</h3>
+    <p>Every chunk stored in Qdrant includes:</p>
+    <pre>{
+  "content": "chunk text content",
+  "file_path": "relative/path/to/file",
+  "folder_id": "01-10",
+  "source": "selenium_repo | playwright_repo | test_cases | ...",
+  "language": "python | java | csv | text | ..."
+}</pre>
+  </section>
+
+  <section id="chunking">
+    <h2>Chunking Strategy</h2>
+    <p>Different data types require different chunking strategies. A single chunk size would lose meaning for code, duplicate test cases, or miss context in logs.</p>
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
+      <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px;color:var(--dim);">Data Type</th><th style="text-align:left;padding:8px;color:var(--dim);">Strategy</th><th style="text-align:left;padding:8px;color:var(--dim);">Rationale</th></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Code (.py, .java, .js)</td><td style="padding:8px;">Function/class boundaries</td><td style="padding:8px;">Code is meaningless mid-function. Each function is a natural atomic unit.</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">CSV/XLSX Test Cases</td><td style="padding:8px;">One row per chunk</td><td style="padding:8px;">Test cases are atomic. Never split a single test case across chunks.</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Markdown Docs</td><td style="padding:8px;">Per heading (## / ###)</td><td style="padding:8px;">Respects document structure. Each section is a self-contained unit.</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">Plain text / Logs</td><td style="padding:8px;">Sliding window 768/150</td><td style="padding:8px;">Overlap preserves context across chunk boundaries. Logs use 512/100.</td></tr>
+      <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;">PDFs</td><td style="padding:8px;">Text extraction + sliding window</td><td style="padding:8px;">PyMuPDF extracts text, then chunked at 768/150.</td></tr>
+    </table>
+  </section>
+
+  <section id="deployment">
+    <h2>Deployment</h2>
+    <p>The application is deployed to <strong>Vercel</strong> using the standard Vercel Python + static build pipeline.</p>
+
+    <h3>Deployment Steps</h3>
+    <ol>
+      <li>Push the repository to GitHub</li>
+      <li>Connect the GitHub repo in Vercel dashboard</li>
+      <li>Set environment variables in Vercel project settings</li>
+      <li>Deploy — Vercel detects <code>vercel.json</code> and builds accordingly</li>
+      <li>Run <code>python scripts/seed_qdrant.py</code> locally to seed Qdrant Cloud</li>
+    </ol>
+
+    <h3>vercel.json</h3>
+    <pre>{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "pip install -r requirements.txt",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/index.py": { "maxDuration": 30 }
+  }
+}</pre>
+    <p>The Python runtime uses <strong>Flask</strong> wrapped as a WSGI application. Vercel automatically detects the <code>app</code> variable in <code>api/index.py</code> and serves it as a serverless function. Static assets (<code>dist/</code>) are served from Vercel's edge CDN.</p>
+  </section>
+
+  <section id="file-structure">
+    <h2>File Structure</h2>
+    <div class="file-tree">
+      <span class="dir">QA_Buddy_AI/</span><br/>
+      <span class="highlight">├── api/index.py</span>              # Vercel serverless Flask app<br/>
+      <span class="highlight">├── qa_buddy/</span><br/>
+      <span class="file">├── config.py</span>                   # Environment config<br/>
+      <span class="file">├── connectors/</span><br/>
+      <span class="file">│   ├── groq_client.py</span>          # GROQ LLM streaming<br/>
+      <span class="file">│   └── jira_connector.py</span>       # JIRA REST API client<br/>
+      <span class="file">├── rag/</span><br/>
+      <span class="file">│   ├── embedder.py</span>             # OpenAI embedding wrapper<br/>
+      <span class="file">│   ├── qdrant_client.py</span>        # Qdrant Cloud client<br/>
+      <span class="file">│   └── query_engine.py</span>         # Search + prompt builder<br/>
+      <span class="file">└── utils/</span><br/>
+      <span class="file">    └── chunker.py</span>               # Per-type chunking<br/>
+      <span class="highlight">├── src/</span>                          # React frontend source<br/>
+      <span class="file">│   ├── App.tsx</span><br/>
+      <span class="file">│   ├── api/chat.ts</span>              # SSE streaming client<br/>
+      <span class="file">│   ├── components/</span><br/>
+      <span class="file">│   │   ├── ChatWindow.tsx</span><br/>
+      <span class="file">│   │   ├── ChatInput.tsx</span><br/>
+      <span class="file">│   │   ├── SourceCard.tsx</span><br/>
+      <span class="file">│   │   └── SettingsPanel.tsx</span><br/>
+      <span class="file">│   ├── hooks/useChat.ts</span><br/>
+      <span class="file">│   └── types/index.ts</span><br/>
+      <span class="highlight">├── data/</span>                         # 10 source folders<br/>
+      <span class="file">│   ├── 01_selenium_repo/</span><br/>
+      <span class="file">│   ├── 02_playwright_repo/</span><br/>
+      <span class="file">│   ├── 03_test_cases/</span><br/>
+      <span class="file">│   ├── 04_jira_tickets/</span><br/>
+      <span class="file">│   ├── 05_company_pdfs/</span><br/>
+      <span class="file">│   ├── 06_figma_designs/</span><br/>
+      <span class="file">│   ├── 07_meeting_notes/</span><br/>
+      <span class="file">│   ├── 08_lucid_charts/</span><br/>
+      <span class="file">│   ├── 09_prd_srs_docs/</span><br/>
+      <span class="file">│   └── 10_jenkins_logs/</span><br/>
+      <span class="highlight">├── scripts/seed_qdrant.py</span>      # Local ingestion script<br/>
+      <span class="highlight">├── vercel.json</span><br/>
+      <span class="highlight">├── package.json</span><br/>
+      <span class="highlight">├── requirements.txt</span><br/>
+      <span class="highlight">├── .env.example</span><br/>
+      <span class="highlight">├── architecture.html</span>           # Architecture diagram page<br/>
+      <span class="highlight">└── index.html</span>                    # App entry point<br/>
+    </div>
+  </section>
+
+  <hr/>
+  <p style="color:var(--dim);font-size:13px;">QA Buddy AI v1.0 — Built with Flask, React, Vite, GROQ, OpenAI, Qdrant Cloud, and ❤️</p>
+</div>
+</body>
+</html>

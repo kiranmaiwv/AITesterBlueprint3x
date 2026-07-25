@@ -1,0 +1,159 @@
+{
+  "sourceRoots": [
+    "src/pages",
+    "src/modules",
+    "src/tests",
+    "src/utils",
+    "src/api",
+    "src/fixtures",
+    "src/config",
+    "src/testdata"
+  ],
+  "placementRules": [
+    {
+      "id": "page-placement",
+      "fileRegex": "Page\\.ts$",
+      "mustBeUnder": "src/pages",
+      "message": "Page objects must live in src/pages"
+    },
+    {
+      "id": "module-placement",
+      "fileRegex": "(Module|Modal)\\.ts$",
+      "mustBeUnder": "src/modules",
+      "message": "Modules/Modals must live in src/modules"
+    },
+    {
+      "id": "util-placement",
+      "fileRegex": "(Util|Utils|Helper|Logger|Generator|Reporter)\\.ts$",
+      "mustBeUnder": "src/utils",
+      "message": "Utility classes must live in src/utils"
+    },
+    {
+      "id": "api-placement",
+      "fileRegex": "Api\\.ts$",
+      "mustBeUnder": "src/api",
+      "message": "API clients must live in src/api"
+    },
+    {
+      "id": "spec-placement",
+      "fileRegex": "\\.spec\\.ts$",
+      "mustBeUnder": "src/tests",
+      "message": "Spec files must live in src/tests"
+    }
+  ],
+  "folderNamingRules": [
+    {
+      "id": "pages-filename",
+      "folder": "src/pages",
+      "allowedFileRegex": [
+        "^[A-Z][A-Za-z0-9]*Page\\.ts$",
+        "^index\\.ts$"
+      ],
+      "message": "Only *Page.ts or index.ts files are allowed in src/pages"
+    },
+    {
+      "id": "modules-filename",
+      "folder": "src/modules",
+      "allowedFileRegex": [
+        "^[A-Z][A-Za-z0-9]*(Module|Modal)\\.ts$",
+        "^index\\.ts$"
+      ],
+      "message": "Only *Module.ts/*Modal.ts or index.ts files are allowed in src/modules"
+    },
+    {
+      "id": "tests-filename",
+      "folder": "src/tests",
+      "allowedFileRegex": [
+        "^[a-z0-9-]+\\.spec\\.ts$"
+      ],
+      "message": "Tests in src/tests must use lower-case *.spec.ts naming"
+    },
+    {
+      "id": "utils-filename",
+      "folder": "src/utils",
+      "allowedFileRegex": [
+        "^[A-Z][A-Za-z0-9]*\\.ts$",
+        "^index\\.ts$"
+      ],
+      "message": "Utility files should use PascalCase class-style naming or index.ts"
+    }
+  ],
+  "contentRules": [
+    {
+      "id": "pages-locator-arrow",
+      "folder": "src/pages",
+      "fileRegex": "^[A-Z].*Page\\.ts$",
+      "requireRegex": [
+        "=\\s*\\(\\)\\s*=>\\s*this\\.page\\.locator\\("
+      ],
+      "message": "Page files should define locators as arrow functions"
+    },
+    {
+      "id": "pages-no-business-logic",
+      "folder": "src/pages",
+      "fileRegex": "^[A-Z].*Page\\.ts$",
+      "forbidRegex": [
+        "\\bif\\s*\\(",
+        "\\bswitch\\s*\\("
+      ],
+      "message": "Business logic should stay out of page objects"
+    },
+    {
+      "id": "modules-no-direct-locator",
+      "folder": "src/modules",
+      "fileRegex": "^[A-Z].*(Module|Modal)\\.ts$",
+      "forbidRegex": [
+        "\\.locator\\("
+      ],
+      "message": "Modules should call Page methods instead of page.locator"
+    },
+    {
+      "id": "tests-use-describe",
+      "folder": "src/tests",
+      "fileRegex": "\\.spec\\.ts$",
+      "requireRegex": [
+        "test\\.describe\\("
+      ],
+      "message": "Specs should group scenarios with test.describe"
+    },
+    {
+      "id": "tests-no-direct-page-import",
+      "folder": "src/tests",
+      "fileRegex": "\\.spec\\.ts$",
+      "forbidRegex": [
+        "from\\s+['\"]@pages/",
+        "from\\s+['\"]\\.\\./pages/"
+      ],
+      "message": "Tests should use fixtures/modules instead of direct Page imports"
+    },
+    {
+      "id": "tests-tags",
+      "folder": "src/tests",
+      "fileRegex": "\\.spec\\.ts$",
+      "requireRegex": [
+        "@P0|@P1|@P2|@Smoke|@Regression"
+      ],
+      "message": "Add tags (@P0/@P1/@P2/@Smoke/@Regression) in describe titles"
+    },
+    {
+      "id": "tests-step",
+      "folder": "src/tests",
+      "fileRegex": "\\.spec\\.ts$",
+      "requireRegex": [
+        "test\\.step\\("
+      ],
+      "message": "Use test.step for key flow visibility in reports"
+    }
+  ],
+  "warningRules": [
+    {
+      "id": "no-console-log",
+      "folder": "src",
+      "fileRegex": "\\.ts$",
+      "forbidRegex": [
+        "console\\.log\\("
+      ],
+      "message": "Use Logger utility instead of console.log"
+    }
+  ]
+}

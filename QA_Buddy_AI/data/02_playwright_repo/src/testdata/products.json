@@ -1,0 +1,106 @@
+{
+    "products": [
+        {
+            "id": "prod-001",
+            "name": "Wireless Bluetooth Headphones",
+            "description": "High-quality wireless headphones with noise cancellation",
+            "price": 149.99,
+            "category": "Electronics",
+            "stock": 50,
+            "rating": 4.5,
+            "sizes": [],
+            "colors": ["Black", "White", "Blue"]
+        },
+        {
+            "id": "prod-002",
+            "name": "Classic Cotton T-Shirt",
+            "description": "Comfortable 100% cotton t-shirt",
+            "price": 29.99,
+            "category": "Clothing",
+            "stock": 200,
+            "rating": 4.2,
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["White", "Black", "Navy", "Gray"]
+        },
+        {
+            "id": "prod-003",
+            "name": "Stainless Steel Water Bottle",
+            "description": "Insulated water bottle keeps drinks cold for 24 hours",
+            "price": 34.99,
+            "category": "Home & Kitchen",
+            "stock": 100,
+            "rating": 4.7,
+            "sizes": ["500ml", "750ml", "1L"],
+            "colors": ["Silver", "Black", "Blue", "Green"]
+        },
+        {
+            "id": "prod-004",
+            "name": "Running Shoes",
+            "description": "Lightweight running shoes with cushioned sole",
+            "price": 89.99,
+            "category": "Sports",
+            "stock": 75,
+            "rating": 4.4,
+            "sizes": ["7", "8", "9", "10", "11", "12"],
+            "colors": ["Black/White", "Blue/Gray", "Red/Black"]
+        },
+        {
+            "id": "prod-005",
+            "name": "Organic Coffee Beans",
+            "description": "Premium organic coffee beans, medium roast",
+            "price": 18.99,
+            "category": "Food & Beverage",
+            "stock": 150,
+            "rating": 4.8,
+            "sizes": ["250g", "500g", "1kg"],
+            "colors": []
+        }
+    ],
+    "outOfStockProduct": {
+        "id": "prod-oos",
+        "name": "Limited Edition Watch",
+        "description": "Exclusive limited edition watch - SOLD OUT",
+        "price": 499.99,
+        "category": "Accessories",
+        "stock": 0,
+        "rating": 4.9
+    },
+    "categories": [
+        "Electronics",
+        "Clothing",
+        "Home & Kitchen",
+        "Sports",
+        "Food & Beverage",
+        "Accessories",
+        "Books",
+        "Toys & Games"
+    ],
+    "promoCodes": [
+        {
+            "code": "SAVE10",
+            "discount": 10,
+            "type": "percentage",
+            "minOrder": 50
+        },
+        {
+            "code": "FLAT20",
+            "discount": 20,
+            "type": "fixed",
+            "minOrder": 100
+        },
+        {
+            "code": "FREESHIP",
+            "discount": 0,
+            "type": "shipping",
+            "minOrder": 30
+        },
+        {
+            "code": "EXPIRED",
+            "discount": 15,
+            "type": "percentage",
+            "minOrder": 0,
+            "expired": true
+        }
+    ]
+}
+

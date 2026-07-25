@@ -1,0 +1,121 @@
+# 10-Slide Deck: Playwright AI Agents + MCP
+
+Use this as a presenter script. One section equals one slide.
+
+## Slide 1: Title
+
+**Playwright AI Agents + MCP**
+
+- Audience: students learning AI-assisted Playwright testing
+- Goal: generate high-quality tests without framework drift
+- Stack: Planner, Generator, Healer + MCP + Rule Engine
+
+## Slide 2: Problem Statement
+
+**Why AI test generation fails without guardrails**
+
+- Random file placement
+- Hallucinated selectors and flows
+- Broken layering (tests bypass modules)
+- Difficult code reviews
+
+## Slide 3: Framework Contract
+
+**Repository architecture contract**
+
+- `src/pages`: locators + simple actions
+- `src/modules`: business workflows (includes modal/module logic)
+- `src/tests`: specs + assertions
+- `src/utils`: shared helper utilities
+
+Rule: `Tests -> Modules -> Pages`
+
+## Slide 4: Agent Roles
+
+**Three-agent operating model**
+
+- `Planner`: scenarios, risks, tags, impacted files
+- `Generator`: code implementation within allowed folders
+- `Healer`: minimal fix loop from failures and traces
+
+## Slide 5: Planner in Practice
+
+**Planner output format students must follow**
+
+- Feature summary
+- Scenario matrix (positive/negative/edge)
+- Data requirements
+- Tags (`@P0/@P1/@P2`, `@Smoke/@Regression`)
+- File impact list
+
+## Slide 6: Generator in Practice
+
+**Controlled generation prompt**
+
+- Write only in approved folders
+- No direct `.locator()` in modules
+- Page objects as `*Page.ts`
+- Module or modal workflows as `*Module.ts` / `*Modal.ts`
+- Tests as lower-case `*.spec.ts`
+
+## Slide 7: MCP Grounding
+
+**Why MCP reduces hallucination**
+
+- Agent actions use real browser state
+- Accessibility snapshots improve deterministic targeting
+- Context is tool-grounded, not guess-based
+
+Minimal setup:
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+## Slide 8: Rule Engine Gate
+
+**Non-negotiable quality gate**
+
+- `npm run rules:check`
+- `npm run rules:changed`
+- `npm run rules:staged`
+
+Hard failures:
+
+- missing tags in specs
+- missing `test.step()` in specs
+- wrong file placement
+- direct locators in modules
+
+## Slide 9: Live Demo Flow
+
+**Demo sequence**
+
+1. Pick one feature.
+2. Run Planner prompt.
+3. Run Generator prompt.
+4. Execute `rules:check`.
+5. Run tagged tests.
+6. If failed, run Healer and retry.
+
+## Slide 10: Student Assignment + Rubric
+
+**Assignment**
+
+- Add one new checkout negative test with valid tags
+- Keep layering intact
+- Pass rule engine and run relevant tests
+
+**Rubric**
+
+- 40% architecture correctness
+- 30% deterministic test design
+- 20% debugging/healing approach
+- 10% readability and naming

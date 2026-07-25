@@ -1,0 +1,50 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "playwright"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:playwright/recommended",
+        "prettier"
+    ],
+    "env": {
+        "node": true,
+        "es2022": true
+    },
+    "rules": {
+        "@typescript-eslint/explicit-function-return-type": "warn",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+        "@typescript-eslint/no-floating-promises": "error",
+        "@typescript-eslint/await-thenable": "error",
+
+        "no-console": ["warn", { "allow": ["warn", "error"] }],
+        "prefer-const": "error",
+        "no-var": "error",
+        "eqeqeq": ["error", "always"],
+        "curly": ["error", "all"],
+
+        "playwright/no-focused-test": "error",
+        "playwright/no-skipped-test": "warn",
+        "playwright/valid-expect": "error",
+        "playwright/expect-expect": "error",
+        "playwright/no-wait-for-timeout": "warn",
+        "playwright/no-force-option": "warn"
+    },
+    "ignorePatterns": [
+        "node_modules/",
+        "dist/",
+        "playwright-report/",
+        "test-results/",
+        "tta-report/"
+    ]
+}

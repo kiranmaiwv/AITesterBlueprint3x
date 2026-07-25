@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Buddy AI — Architecture</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root { --bg: #0f1117; --surface: #1a1d27; --s2: #252836; --border: #2e3144; --text: #e1e4ed; --dim: #8b8fa3; --accent: #6c5ce7; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 40px 24px; }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  .subtitle { color: var(--dim); margin-bottom: 32px; font-size: 14px; }
+  .diagram-wrapper { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 40px; overflow-x: auto; }
+  .toolbar { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 16px; }
+  .action-btn { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer; font-weight: 600; }
+  .action-btn:hover { opacity: 0.9; }
+  .section { margin-bottom: 40px; }
+  @media print {
+    body { padding: 16px; }
+    .toolbar { display: none !important; }
+    .diagram-wrapper { border: none; padding: 0; }
+  }
+  .section h2 { font-size: 20px; margin-bottom: 16px; color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card h3 { font-size: 15px; margin-bottom: 8px; }
+  .card p, .card li { font-size: 13px; color: var(--dim); line-height: 1.6; }
+  .card ul { list-style: none; padding: 0; }
+  .card li { padding: 4px 0; }
+  .card li::before { content: "→ "; color: var(--accent); }
+  .tag { display: inline-block; background: var(--accent); color: white; font-size: 11px; padding: 2px 8px; border-radius: 99px; margin-right: 4px; }
+  .flow { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 20px 0; }
+  .flow-step { background: var(--s2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; text-align: center; min-width: 120px; }
+  .flow-step .label { font-size: 11px; color: var(--dim); }
+  .flow-step .value { font-size: 13px; font-weight: 600; }
+  .arrow { color: var(--dim); font-size: 18px; }
+  .mermaid { background: transparent !important; }
+  .mermaid svg { max-width: 100%; height: auto; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>QA Buddy AI — Architecture</h1>
+  <p class="subtitle">Hybrid RAG architecture with local embeddings, cloud retrieval, and streaming LLM responses</p>
+
+  <div class="toolbar">
+    <button class="action-btn" id="export-svg-btn">Export as SVG</button>
+    <button class="action-btn" id="print-pdf-btn">Print / Save PDF</button>
+  </div>
+
+  <!-- Mermaid diagram -->
+  <div class="diagram-wrapper">
+    <pre class="mermaid">
+---
+title: QA Buddy AI — System Architecture
+---
+flowchart LR
+    subgraph DS["DATA SOURCES"]
+      S1["Selenium<br/>Java framework"]
+      S2["Playwright<br/>TypeScript tests"]
+      S3["Test Cases<br/>CSV / Xray"]
+      S4["JIRA<br/>Bugs / Tickets"]
+      S5["Docs<br/>Standards / RTM"]
+      S6["PRD / SRS<br/>Requirements"]
+      S7["Transcripts<br/>Meetings / Calls"]
+      S8["Jenkins<br/>CI/CD Logs"]
+      S9["Figma<br/>UI Designs"]
+      S10["Glossary<br/>QA Terminology"]
+    end
+
+    subgraph IP["INGESTION PIPELINE"]
+      P1["1. Parse<br/>PDF / CSV / JSON / Code"]
+      P2["2. Clean<br/>Normalize / Dedup"]
+      P3["3. Chunk<br/>tokens / overlap"]
+      P4["4. Embed<br/>BAAI/bge-small-en-v1.5"]
+      P5["5. Index<br/>Qdrant upsert"]
+    end
+
+    subgraph ST["STORAGE"]
+      VQ["Qdrant<br/>Vector DB"]
+      KB["Chunk Payloads<br/>file_path, folder_id, source"]
+    end
+
+    subgraph QP["QUERY PIPELINE"]
+      UQ["User Query"]
+      MD["Mode Detection<br/>answer / review / recall"]
+      HS["Hybrid Search<br/>vector similarity"]
+      RR["Rerank / Filter<br/>top 6 chunks"]
+      GL["GROQ LLM<br/>mixtral-8x7b-32768"]
+      CA["Cited Answer<br/>with source citations"]
+    end
+
+    subgraph UI["UI LAYER"]
+      C1["Chat Interface<br/>App.tsx + ChatWindow"]
+      C2["Source Filter<br/>9 source toggles"]
+      C3["Citation Cards<br/>inline references"]
+      C4["Streaming SSE<br/>useChat / chat.ts"]
+      C5["Vercel Deploy<br/>static + serverless"]
+    end
+
+    style DS fill:#0f1724,stroke:#4f46e5,color:#e0e7ff
+    style IP fill:#111827,stroke:#2563eb,color:#bfdbfe
+    style ST fill:#111827,stroke:#10b981,color:#d1fae5
+    style QP fill:#111827,stroke:#8b5cf6,color:#ede9fe
+    style UI fill:#111827,stroke:#f59e0b,color:#fef3c7
+
+    S1 & S2 & S3 & S4 & S5 & S6 & S7 & S8 & S9 & S10 --> P1
+    P1 --> P2 --> P3 --> P4 --> P5 --> VQ
+    VQ --> HS
+    UQ --> MD --> HS --> RR --> GL --> CA
+    CA --> C1
+    C4 --> C1
+    C2 --> C1
+    C3 --> C1
+    C5 --> C1
+    P5 --> KB
+    KB --> HS
+    VQ --> RR
+    GL --> C4
+    </pre>
+  </div>
+
+  <!-- Data Flow -->
+  <div class="section">
+    <h2>Query Flow</h2>
+    <div class="flow">
+      <div class="flow-step"><div class="label">Step 1</div><div class="value">User Question</div></div>
+      <div class="arrow">→</div>
+      <div class="flow-step"><div class="label">Step 2</div><div class="value">OpenAI Embed</div><div class="label">text-embedding-3-small</div></div>
+      <div class="arrow">→</div>
+      <div class="flow-step"><div class="label">Step 3</div><div class="value">Qdrant Search</div><div class="label">Top-4 chunks</div></div>
+      <div class="arrow">→</div>
+      <div class="flow-step"><div class="label">Step 4</div><div class="value">Build Prompt</div><div class="label">Context + History</div></div>
+      <div class="arrow">→</div>
+      <div class="flow-step"><div class="label">Step 5</div><div class="value">GROQ Stream</div><div class="label">mixtral-8x7b</div></div>
+      <div class="arrow">→</div>
+      <div class="flow-step"><div class="label">Step 6</div><div class="value">Answer + Sources</div><div class="label">SSE to UI</div></div>
+    </div>
+  </div>
+
+  <!-- Tech Stack Cards -->
+  <div class="section">
+    <h2>Technology Stack</h2>
+    <div class="grid">
+      <div class="card">
+        <h3><span class="tag">LLM</span> GROQ</h3>
+        <p>Mixtral-8x7b-32768 for answer generation. 32K context window, sub-100ms TTFT, free tier available. Streaming via Server-Sent Events.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag">Embeddings</span> OpenAI</h3>
+        <p>text-embedding-3-small (768-dim). Chosen over bge-m3 for Vercel compatibility — no local model to load. $0.02/1M tokens.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag">Vector DB</span> Qdrant Cloud</h3>
+        <p>Managed vector database with built-in cosine similarity. Free tier includes 1GB storage. Single-container REST API.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag">Backend</span> Flask + Python 3.12</h3>
+        <p>Vercel Python serverless runtime. 6 API endpoints: health, chat (SSE), settings, JIRA test, sources, ingestion trigger.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag">Frontend</span> React 19 + Vite</h3>
+        <p>TypeScript SPA with streaming chat UI, ReactMarkdown rendering, cited source cards, settings panel. Built with Vite 6.</p>
+      </div>
+      <div class="card">
+        <h3><span class="tag">Ingestion</span> Local Script</h3>
+        <p>scripts/seed_qdrant.py chunks files per-type (code by function, CSV per-row, MD by heading, text by sliding window), embeds via OpenAI, upserts to Qdrant Cloud.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chunking Strategy -->
+  <div class="section">
+    <h2>Chunking Strategy</h2>
+    <div class="grid">
+      <div class="card"><h3>📁 Code (py/java/js/ts)</h3><ul><li>Semantic: per function/class boundary</li><li>Zero overlap — code is meaningless mid-function</li><li>Preserves docstrings and imports</li></ul></div>
+      <div class="card"><h3>📁 CSV Test Cases</h3><ul><li>One row = one chunk</li><li>Header row preserved per chunk</li><li>Atomic — never split a test case</li></ul></div>
+      <div class="card"><h3>📁 Markdown Docs</h3><ul><li>Per heading (## / ###) boundaries</li><li>Respects document structure</li><li>Fallback to sliding window (768/150)</li></ul></div>
+      <div class="card"><h3>📁 Generic (txt/log/pdf)</h3><ul><li>Sliding window: 768 chars, 150 overlap</li><li>Smaller for logs: 512 chars, 100 overlap</li><li>Full content via PyMuPDF for PDFs</li></ul></div>
+    </div>
+  </div>
+
+  <!-- API Endpoints -->
+  <div class="section">
+    <h2>API Endpoints</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>GET /api/health</h3>
+        <p>System status: GROQ, OpenAI, Qdrant, JIRA connectivity checks. Returns 200 when API is alive.</p>
+      </div>
+      <div class="card">
+        <h3>POST /api/chat</h3>
+        <p>Main query endpoint. Accepts {query, history}, returns SSE stream with tokens + source citations.</p>
+      </div>
+      <div class="card">
+        <h3>GET /api/settings</h3>
+        <p>Read-only config status. Shows which services are configured (keys masked).</p>
+      </div>
+      <div class="card">
+        <h3>POST /api/jira/test</h3>
+        <p>Test JIRA connection with custom JQL. Returns first 5 issues or error message.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    themeVariables: {
+      primaryColor: '#6c5ce7',
+      primaryTextColor: '#e1e4ed',
+      primaryBorderColor: '#2e3144',
+      lineColor: '#8b8fa3',
+      secondaryColor: '#252836',
+      tertiaryColor: '#1a1d27',
+      fontSize: '14px'
+    }
+  });
+
+  async function renderDiagram() {
+    const source = document.querySelector('.mermaid').textContent.trim();
+    const id = 'qa-buddy-architecture-' + Math.random().toString(36).slice(2, 8);
+    const container = document.querySelector('.diagram-wrapper');
+    const { svg } = await mermaid.render(id, source);
+    container.innerHTML = svg;
+  }
+
+  async function exportDiagramAsSvg() {
+    const source = document.querySelector('.mermaid').textContent.trim();
+    const id = 'qa-buddy-architecture-export-' + Math.random().toString(36).slice(2, 8);
+    const { svg } = await mermaid.render(id, source);
+    const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'qa-buddy-architecture.svg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderDiagram().catch(() => {
+      const note = document.createElement('p');
+      note.textContent = 'The diagram could not be rendered. Please refresh the page or serve the app over a local web server.';
+      note.style.color = '#ff8a80';
+      document.querySelector('.diagram-wrapper').prepend(note);
+    });
+
+    document.getElementById('export-svg-btn')?.addEventListener('click', exportDiagramAsSvg);
+    document.getElementById('print-pdf-btn')?.addEventListener('click', () => window.print());
+  });
+</script>
+</body>
+</html>

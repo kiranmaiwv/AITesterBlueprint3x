@@ -1,0 +1,70 @@
+name: 🚀 Smoke Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  CI: true
+  NODE_VERSION: '20'
+
+jobs:
+  smoke:
+    name: 🔥 Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🎭 Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: 🔥 Run Smoke Tests (@P0 + @Smoke)
+        run: npx playwright test --grep "@P0|@Smoke" --project=chromium
+
+      - name: 📊 Upload Smoke Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-report
+          path: |
+            playwright-report/
+            tta-report/
+          retention-days: 7
+
+      - name: 📊 Test Summary
+        if: always()
+        run: |
+          echo "## 🔥 Smoke Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f test-results/results.json ]; then
+            PASSED=$(cat test-results/results.json | jq '.stats.expected // 0')
+            FAILED=$(cat test-results/results.json | jq '.stats.unexpected // 0')
+            SKIPPED=$(cat test-results/results.json | jq '.stats.skipped // 0')
+            echo "| Status | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| ✅ Passed | $PASSED |" >> $GITHUB_STEP_SUMMARY
+            echo "| ❌ Failed | $FAILED |" >> $GITHUB_STEP_SUMMARY
+            echo "| ⏭️ Skipped | $SKIPPED |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Results file not found" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: ❌ Fail if Tests Failed
+        if: failure()
+        run: |
+          echo "::error::Smoke tests failed! Please check the test results."
+          exit 1
+

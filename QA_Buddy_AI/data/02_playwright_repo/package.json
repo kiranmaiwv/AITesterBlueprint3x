@@ -1,0 +1,47 @@
+{
+  "name": "playwright_framework",
+  "version": "1.0.0",
+  "description": "A modular, scalable test automation framework built with Playwright and TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project=mobile-chrome",
+    "test:smoke": "playwright test --grep @Smoke",
+    "test:regression": "playwright test --grep @Regression",
+    "test:p0": "playwright test --grep @P0",
+    "test:report": "playwright show-report",
+    "test:ci": "playwright test --reporter=list,json",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "build": "tsc",
+    "clean": "rm -rf dist test-results playwright-report tta-report",
+    "rules:check": "node scripts/rule-engine.js",
+    "rules:changed": "node scripts/rule-engine.js --changed",
+    "rules:staged": "node scripts/rule-engine.js --staged",
+    "agents:init": "npx playwright init-agents"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "testing",
+    "automation",
+    "e2e"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.6",
+    "dotenv": "^17.2.3",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run linting on staged files
+echo "🔍 Running ESLint on staged files..."
+npx lint-staged
+
+# Run TypeScript type check
+echo "📝 Running TypeScript type check..."
+npx tsc --noEmit
+
+# Run architecture rule engine on staged files
+echo "🧭 Running framework rule engine on staged files..."
+npm run rules:staged
+
+echo "✅ Pre-commit checks passed!"
