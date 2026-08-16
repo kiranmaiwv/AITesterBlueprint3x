@@ -21,6 +21,29 @@ def _env_with_db() -> dict:
     return env
 
 
+# Hardcoded relative DB paths that AI-generated tests sometimes use.
+_LEGACY_DB_PATHS = [
+    "../backend/database/etl_qa.db",
+    "./backend/database/etl_qa.db",
+    "backend/database/etl_qa.db",
+    "etl_qa.db",
+]
+
+
+def _rewrite_db_paths(test_code: str) -> str:
+    """
+    Rewrite any hardcoded relative DB path in generated test code to the
+    absolute path (no os import needed, works in any cwd).
+    """
+    import re
+
+    abs_path = repr(DB_PATH)
+    for legacy in _LEGACY_DB_PATHS:
+        escaped = re.escape(legacy)
+        test_code = re.sub(rf"['\"]({escaped})['\"]", abs_path, test_code)
+    return test_code
+
+
 def run_single_test(test_code: str) -> dict:
     """
     Write the provided test code to a temporary file and run it with pytest.
@@ -34,6 +57,8 @@ def run_single_test(test_code: str) -> dict:
             "error": "No valid pytest test function found in the provided code.",
         }
 
+    test_code = _rewrite_db_paths(test_code)
+
     tmp_dir = tempfile.mkdtemp(prefix="etlqa_test_")
     tmp_file = os.path.join(tmp_dir, "test_generated.py")
     with open(tmp_file, "w") as f:
@@ -44,7 +69,7 @@ def run_single_test(test_code: str) -> dict:
             [sys.executable, "-m", "pytest", tmp_file, "-v", "--tb=short", "-p", "no:cacheprovider"],
             capture_output=True,
             text=True,
-            cwd=tmp_dir,
+            cwd=PROJECT_ROOT,
             env=_env_with_db(),
             timeout=60,
         )

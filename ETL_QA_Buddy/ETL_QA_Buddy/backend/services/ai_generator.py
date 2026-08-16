@@ -13,9 +13,10 @@ import re
 SYSTEM_PROMPT = (
     "You are a senior QA engineer expert in ETL testing with pytest and SQLite. "
     "Generate a single pytest test function that tests the described ETL data "
-    "quality condition against a SQLite database at path "
-    "'../backend/database/etl_qa.db'. Import sqlite3 in the function. Return ONLY "
-    "the python function code, no markdown, no explanation."
+    "quality condition against a SQLite database. Import sqlite3 and os in the "
+    "function. Connect using: db_path = os.environ.get(\"DATABASE_PATH\", "
+    "\"../backend/database/etl_qa.db\") . Return ONLY the python function code, "
+    "no markdown, no explanation."
 )
 
 
