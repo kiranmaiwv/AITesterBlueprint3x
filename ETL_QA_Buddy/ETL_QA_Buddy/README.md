@@ -221,6 +221,12 @@ deployed app can run the full test suite end-to-end — no local server needed.
 5. Click **Run All Tests** (bottom) → the full pre-written suite runs and results
    appear as a PASS/FAIL table with a summary (Total / Passed / Failed).
 
+> Generated tests connect to the DB via the `DATABASE_PATH` environment
+> variable (set by the backend to the absolute SQLite path). The test runner
+> also rewrites any legacy hardcoded `../backend/database/etl_qa.db` paths in
+> generated code to the absolute path, so "Run This Test" works regardless of
+> what the AI model emits.
+
 ### Sample test descriptions to try
 - `Check all customer emails are unique`  *(will FAIL — soft duplicate injected)*
 - `Verify no NULL values in order total_amount`
