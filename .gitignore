@@ -11,3 +11,14 @@ dist/
 .venv/
 .vercel/
 chroma_db/
+
+# Next.js build output
+.next/
+
+# SQLite database (generated — do not commit)
+*.db
+*.sqlite
+*.sqlite3
+
+# Vercel deployment
+.vercel/
