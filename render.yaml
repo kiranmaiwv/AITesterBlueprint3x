@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: etl-qa-buddy-backend
+    runtime: python
+    rootDir: ETL_QA_Buddy/ETL_QA_Buddy
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: DATABASE_PATH
+        value: ./database/etl_qa.db
+      - key: OPENAI_API_KEY
+        sync: false

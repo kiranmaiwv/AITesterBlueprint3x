@@ -17,6 +17,7 @@ Run locally:
 
 import os
 import sqlite3
+import sys
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
@@ -35,6 +36,17 @@ if not DB_PATH or not os.path.isabs(DB_PATH):
     # Resolve relative DATABASE_PATH against the backend directory.
     DB_PATH = os.path.join(BASE_DIR, os.environ.get("DATABASE_PATH", "database/etl_qa.db")) \
         if os.environ.get("DATABASE_PATH") else DEFAULT_DB
+
+if not os.path.exists(DB_PATH):
+    # Create and populate the SQLite database on first boot (e.g. Render's
+    # ephemeral filesystem). Same pattern as tests/conftest.py.
+    setup_dir = os.path.join(BASE_DIR, "database")
+    sys.path.insert(0, setup_dir)
+    try:
+        import setup_db  # type: ignore
+        setup_db.create_database(DB_PATH)
+    finally:
+        sys.path.pop(0)
 
 app = FastAPI(title="ETL QA Buddy API", version="1.0.0")
 
