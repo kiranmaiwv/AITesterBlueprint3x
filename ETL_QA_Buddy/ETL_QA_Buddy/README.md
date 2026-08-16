@@ -226,6 +226,11 @@ deployed app can run the full test suite end-to-end — no local server needed.
 > also rewrites any legacy hardcoded `../backend/database/etl_qa.db` paths in
 > generated code to the absolute path, so "Run This Test" works regardless of
 > what the AI model emits.
+>
+> The generator also injects the **live database schema** (all table and column
+> names) into the AI prompt, so GPT-4o-mini writes SQL against the real columns
+> (e.g. `unit_price`, `customer_id`) instead of guessing names like `price` or
+> `id` — generated tests run correctly the first time.
 
 ### Sample test descriptions to try
 - `Check all customer emails are unique`  *(will FAIL — soft duplicate injected)*
