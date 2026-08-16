@@ -15,9 +15,39 @@ SYSTEM_PROMPT = (
     "Generate a single pytest test function that tests the described ETL data "
     "quality condition against a SQLite database. Import sqlite3 and os in the "
     "function. Connect using: db_path = os.environ.get(\"DATABASE_PATH\", "
-    "\"../backend/database/etl_qa.db\") . Return ONLY the python function code, "
-    "no markdown, no explanation."
+    "\"../backend/database/etl_qa.db\") . Use ONLY the table and column names "
+    "from the provided schema — do not invent column names. Return ONLY the "
+    "python function code, no markdown, no explanation."
 )
+
+
+def _get_schema_text() -> str:
+    """
+    Read the live SQLite schema (tables + columns) so the AI generates SQL
+    with correct, real column names.
+    """
+    import sqlite3
+
+    db_path = os.environ.get(
+        "DATABASE_PATH",
+        os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                     "database", "etl_qa.db"),
+    )
+    if not os.path.exists(db_path):
+        return "(no schema available)"
+
+    lines = []
+    conn = sqlite3.connect(db_path)
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+        for (table,) in cur.fetchall():
+            cur.execute(f"PRAGMA table_info({table})")
+            cols = [row[1] for row in cur.fetchall()]
+            lines.append(f"{table}: {', '.join(cols)}")
+    finally:
+        conn.close()
+    return "\n".join(lines)
 
 
 def _strip_markdown_fences(text: str) -> str:
@@ -81,11 +111,18 @@ def generate_test_code(description: str) -> str:
         # Imported lazily so the module works even if openai isn't installed.
         from openai import OpenAI
 
+        schema_text = _get_schema_text()
+        system_content = (
+            SYSTEM_PROMPT
+            + "\n\nDATABASE SCHEMA (use exactly these names):\n"
+            + schema_text
+        )
+
         client = OpenAI(api_key=api_key)
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": system_content},
                 {"role": "user", "content": description.strip()},
             ],
             temperature=0.2,
