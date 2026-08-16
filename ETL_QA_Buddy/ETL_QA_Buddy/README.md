@@ -67,10 +67,10 @@ the tool catching genuine issues:
 
 | Layer | Technology |
 | --- | --- |
-| **Frontend** | Next.js 14 (App Router) · React 18 · TypeScript · dark-theme CSS — deployable to **Vercel** |
-| **Backend** | FastAPI · Uvicorn · Pydantic (runs **locally**, no Docker) |
+| **Frontend** | Next.js 14 (App Router) · React 18 · TypeScript · dark-theme CSS — hosted on **Vercel** |
+| **Backend** | FastAPI · Uvicorn · Pydantic — hosted on **Render** |
 | **AI** | OpenAI `gpt-4o-mini` (with template fallback) |
-| **Database** | **SQLite** (zero-setup, file-based — no external DB) |
+| **Database** | **SQLite** (zero-setup, file-based — auto-created on boot) |
 | **Testing** | pytest · pytest-json-report |
 | **Language** | Python 3.10+ · TypeScript |
 
@@ -86,7 +86,7 @@ the tool catching genuine issues:
                                     │  HTTP (NEXT_PUBLIC_BACKEND_URL)
                                     ▼
                     ┌───────────────────────────────────────┐
-                    │   FastAPI Backend (local, no Docker)   │
+                    │   FastAPI Backend (Render)             │
                     │   GET  /health                         │
                     │   GET  /schema                         │
                     │   POST /generate-test  ── OpenAI ──►   │
@@ -116,6 +116,9 @@ the tool catching genuine issues:
 
 ### 1. Backend + Database (local)
 
+> The deployed backend auto-creates the SQLite DB on first boot, so the
+> `setup_db.py` step below is only needed for local development.
+
 ```bash
 cd backend
 
@@ -130,7 +133,7 @@ pip install -r requirements.txt
 cp .env.example .env
 #   → edit .env and add your OPENAI_API_KEY (optional; falls back to template)
 
-# create and populate the SQLite database
+# create and populate the SQLite database (optional — auto-created on boot)
 python database/setup_db.py
 
 # start the API on http://localhost:8000
@@ -164,14 +167,18 @@ npm run dev
 
 ---
 
-## 🌐 Demo (Vercel link)
+## 🌐 Live Demo
 
-The **frontend** is designed for one-click Vercel deployment. The **backend runs
-locally** (Vercel hosts the UI only), so after deploying set the frontend's
-`NEXT_PUBLIC_BACKEND_URL` to wherever your FastAPI server is reachable.
+Both the frontend and backend are deployed:
 
-**Live demo:** `https://<your-project>.vercel.app`
-_(replace with your Vercel URL after deploying — see steps below)_
+| Layer | URL |
+| --- | --- |
+| **Frontend (Vercel)** | **https://etl-qa-buddy.vercel.app** |
+| **Backend API (Render)** | **https://etl-qa-buddy-backend.onrender.com** |
+| Backend health check | `https://etl-qa-buddy-backend.onrender.com/health` |
+
+The frontend's `NEXT_PUBLIC_BACKEND_URL` is set to the Render backend, so the
+deployed app can run the full test suite end-to-end — no local server needed.
 
 ### Deploy the frontend to Vercel
 
@@ -182,12 +189,22 @@ _(replace with your Vercel URL after deploying — see steps below)_
    - Build: `cd frontend && npm run build`
    - Output: `frontend/.next`
 4. Add an environment variable in the Vercel dashboard:
-   - `NEXT_PUBLIC_BACKEND_URL` = the URL where your local/remote FastAPI backend
-     is reachable (e.g. an [ngrok](https://ngrok.com) tunnel to `localhost:8000`).
-5. Click **Deploy**. Your UI goes live at `https://<your-project>.vercel.app`.
+   - `NEXT_PUBLIC_BACKEND_URL` = `https://etl-qa-buddy-backend.onrender.com`
+5. Click **Deploy**. Your UI goes live at `https://etl-qa-buddy.vercel.app`.
 
-> Because the backend is local-only, use a tunnel (ngrok / Cloudflare Tunnel) to
-> expose `http://localhost:8000` if you want the deployed Vercel UI to reach it.
+### Deploy the backend to Render
+
+1. The repo includes `render.yaml` (a Render Blueprint) at the repo root.
+2. Push to GitHub, then in Render: **New → Blueprint** and select the repo.
+3. Render provisions the web service automatically from `render.yaml`.
+4. The backend auto-creates and seeds the SQLite DB on first boot, so no
+   manual setup is required.
+5. Optional: add `OPENAI_API_KEY` as an env var in the Render dashboard to
+   enable real AI test generation (falls back to a deterministic template if
+   unset).
+
+> The backend runs on Render's free tier, which spins down after ~15 minutes
+> of inactivity — the first request after idle will be slow (cold start).
 
 ---
 
@@ -274,7 +291,7 @@ _(replace with your Vercel URL after deploying — see steps below)_
 ### `frontend/.env.local`
 | Variable | Description | Default |
 | --- | --- | --- |
-| `NEXT_PUBLIC_BACKEND_URL` | URL of the FastAPI backend | `http://localhost:8000` |
+| `NEXT_PUBLIC_BACKEND_URL` | URL of the FastAPI backend | `https://etl-qa-buddy-backend.onrender.com` |
 
 > ⚠️ Only `.env.example` files are committed. **Never commit real secrets** —
 > `.env` files and the generated `etl_qa.db` are git-ignored.
@@ -287,14 +304,16 @@ _(replace with your Vercel URL after deploying — see steps below)_
 ETL_QA_Buddy/
 ├── frontend/                 # Next.js app → Vercel
 │   ├── app/                  # App Router (layout, page, globals.css)
-│   └── components/           # TestGenerator, TestResults, SampleSchema
-├── backend/                  # FastAPI backend (local)
-│   ├── main.py               # API endpoints
+│   ├── components/           # TestGenerator, TestResults, SampleSchema
+│   └── vercel.json           # Vercel build config (Next.js, .next output)
+├── backend/                  # FastAPI backend → Render
+│   ├── main.py               # API endpoints (auto-creates SQLite DB on boot)
 │   ├── database/setup_db.py  # Creates + populates SQLite DB
 │   └── services/             # ai_generator.py, test_runner.py
 ├── tests/                    # Pre-written pytest ETL QA suite
 ├── docs/                     # Screenshots
 ├── vercel.json               # Vercel config (frontend)
+├── render.yaml               # Render Blueprint (backend web service)
 ├── .gitignore
 └── README.md
 ```
