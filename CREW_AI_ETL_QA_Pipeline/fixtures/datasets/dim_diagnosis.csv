@@ -1,0 +1,101 @@
+diagnosis_sk,icd10_code,icd10_description,diagnosis_category,chronic_flag,etl_batch_id,etl_loaded_at
+1,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+2,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+3,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+4,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+5,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+6,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+7,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+8,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+9,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+10,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+11,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+12,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+13,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+14,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+15,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+16,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+17,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+18,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+19,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+20,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+21,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+22,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+23,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+24,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+25,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+26,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+27,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+28,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+29,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+30,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+31,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+32,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+33,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+34,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+35,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+36,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+37,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+38,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+39,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+40,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+41,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+42,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+43,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+44,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+45,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+46,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+47,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+48,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+49,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+50,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+51,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+52,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+53,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+54,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+55,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+56,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+57,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+58,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+59,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+60,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+61,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+62,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+63,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+64,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+65,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+66,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+67,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+68,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+69,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+70,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+71,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+72,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+73,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+74,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+75,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+76,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+77,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+78,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+79,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+80,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+81,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+82,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+83,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+84,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+85,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+86,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+87,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+88,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+89,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+90,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+91,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+92,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+93,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+94,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+95,Z00.00,General adult medical examination,Preventive,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+96,E11.9,Type 2 diabetes mellitus without complications,Endocrine,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+97,I10,Essential (primary) hypertension,Circulatory,Y,BATCH-2026-01-15-001,2026-01-15 03:00:00
+98,J45.909,Unspecified asthma,Respiratory,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+99,M54.5,Low back pain,Musculoskeletal,N,BATCH-2026-01-15-001,2026-01-15 03:00:00
+100,F32.9,"Major depressive disorder, single episode",Mental,N,BATCH-2026-01-15-001,2026-01-15 03:00:00

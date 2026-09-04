@@ -1,0 +1,101 @@
+service_sk,cpt_code,cpt_description,service_category,revenue_code,place_of_service,etl_batch_id,etl_loaded_at
+1,99214,"Office visit, established patient, high complexity",Evaluation & Management,0301,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+2,93000,Electrocardiogram complete,Radiology,0302,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+3,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+4,71045,Chest x-ray single view,Radiology,0304,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+5,J3420,Vitamin B-12 injection,Procedure,0305,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+6,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+7,99214,"Office visit, established patient, high complexity",Evaluation & Management,0307,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+8,93000,Electrocardiogram complete,Radiology,0308,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+9,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+10,71045,Chest x-ray single view,Radiology,0310,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+11,J3420,Vitamin B-12 injection,Procedure,0311,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+12,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+13,99214,"Office visit, established patient, high complexity",Evaluation & Management,0313,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+14,93000,Electrocardiogram complete,Radiology,0314,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+15,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+16,71045,Chest x-ray single view,Radiology,0316,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+17,J3420,Vitamin B-12 injection,Procedure,0317,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+18,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+19,99214,"Office visit, established patient, high complexity",Evaluation & Management,0319,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+20,93000,Electrocardiogram complete,Radiology,0320,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+21,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+22,71045,Chest x-ray single view,Radiology,0322,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+23,J3420,Vitamin B-12 injection,Procedure,0323,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+24,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+25,99214,"Office visit, established patient, high complexity",Evaluation & Management,0325,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+26,93000,Electrocardiogram complete,Radiology,0326,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+27,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+28,71045,Chest x-ray single view,Radiology,0328,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+29,J3420,Vitamin B-12 injection,Procedure,0329,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+30,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+31,99214,"Office visit, established patient, high complexity",Evaluation & Management,0331,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+32,93000,Electrocardiogram complete,Radiology,0332,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+33,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+34,71045,Chest x-ray single view,Radiology,0334,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+35,J3420,Vitamin B-12 injection,Procedure,0335,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+36,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+37,99214,"Office visit, established patient, high complexity",Evaluation & Management,0337,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+38,93000,Electrocardiogram complete,Radiology,0338,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+39,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+40,71045,Chest x-ray single view,Radiology,0340,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+41,J3420,Vitamin B-12 injection,Procedure,0341,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+42,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+43,99214,"Office visit, established patient, high complexity",Evaluation & Management,0343,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+44,93000,Electrocardiogram complete,Radiology,0344,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+45,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+46,71045,Chest x-ray single view,Radiology,0346,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+47,J3420,Vitamin B-12 injection,Procedure,0347,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+48,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+49,99214,"Office visit, established patient, high complexity",Evaluation & Management,0349,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+50,93000,Electrocardiogram complete,Radiology,0350,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+51,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+52,71045,Chest x-ray single view,Radiology,0352,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+53,J3420,Vitamin B-12 injection,Procedure,0353,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+54,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+55,99214,"Office visit, established patient, high complexity",Evaluation & Management,0355,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+56,93000,Electrocardiogram complete,Radiology,0356,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+57,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+58,71045,Chest x-ray single view,Radiology,0358,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+59,J3420,Vitamin B-12 injection,Procedure,0359,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+60,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+61,99214,"Office visit, established patient, high complexity",Evaluation & Management,0361,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+62,93000,Electrocardiogram complete,Radiology,0362,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+63,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+64,71045,Chest x-ray single view,Radiology,0364,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+65,J3420,Vitamin B-12 injection,Procedure,0365,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+66,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+67,99214,"Office visit, established patient, high complexity",Evaluation & Management,0367,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+68,93000,Electrocardiogram complete,Radiology,0368,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+69,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+70,71045,Chest x-ray single view,Radiology,0370,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+71,J3420,Vitamin B-12 injection,Procedure,0371,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+72,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+73,99214,"Office visit, established patient, high complexity",Evaluation & Management,0373,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+74,93000,Electrocardiogram complete,Radiology,0374,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+75,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+76,71045,Chest x-ray single view,Radiology,0376,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+77,J3420,Vitamin B-12 injection,Procedure,0377,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+78,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+79,99214,"Office visit, established patient, high complexity",Evaluation & Management,0379,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+80,93000,Electrocardiogram complete,Radiology,0380,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+81,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+82,71045,Chest x-ray single view,Radiology,0382,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+83,J3420,Vitamin B-12 injection,Procedure,0383,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+84,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+85,99214,"Office visit, established patient, high complexity",Evaluation & Management,0385,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+86,93000,Electrocardiogram complete,Radiology,0386,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+87,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+88,71045,Chest x-ray single view,Radiology,0388,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+89,J3420,Vitamin B-12 injection,Procedure,0389,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+90,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+91,99214,"Office visit, established patient, high complexity",Evaluation & Management,0391,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+92,93000,Electrocardiogram complete,Radiology,0392,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+93,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+94,71045,Chest x-ray single view,Radiology,0394,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+95,J3420,Vitamin B-12 injection,Procedure,0395,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+96,99213,"Office visit, established patient",Evaluation & Management,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+97,99214,"Office visit, established patient, high complexity",Evaluation & Management,0397,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+98,93000,Electrocardiogram complete,Radiology,0398,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00
+99,80053,Comprehensive metabolic panel,Laboratory,,Office,BATCH-2026-01-15-001,2026-01-15 03:00:00
+100,71045,Chest x-ray single view,Radiology,0301,Outpatient Hospital,BATCH-2026-01-15-001,2026-01-15 03:00:00

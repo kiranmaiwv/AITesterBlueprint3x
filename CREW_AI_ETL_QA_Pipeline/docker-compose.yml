@@ -1,0 +1,17 @@
+services:
+  hc-etl-qa-crew:
+    build: .
+    image: hc-etl-qa-crew:1.0.0
+    container_name: hc-etl-qa-crew
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      # Configuration stays explicit inside the container.
+      HC_ETL_QA_CREW_SKIP_DOTENV: "1"
+      OUTPUT_DIR: /app/outputs
+      DATA_SOURCE_MODE: fixture
+    volumes:
+      - ./outputs:/app/outputs
+    restart: unless-stopped
